@@ -1,0 +1,6 @@
+{
+  "loader": "betterfoliage:leaves",
+  "leaves": "biomesoplenty:block/snowblossom_leaves",
+  "fluff": "betterfoliage_bop:block/snowblossom_fluff",
+  "tintLeaves": false
+}

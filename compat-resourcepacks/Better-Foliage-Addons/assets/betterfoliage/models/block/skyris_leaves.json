@@ -1,0 +1,6 @@
+{
+  "loader": "betterfoliage:leaves",
+  "leaves": "biomeswevegone:block/skyris/leaves",
+  "fluff": "betterfoliage:block/skyris/fluff",
+  "tintLeaves": false
+}

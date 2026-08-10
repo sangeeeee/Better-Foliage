@@ -1,0 +1,6 @@
+{
+  "loader": "betterfoliage:leaves",
+  "leaves": "biomesoplenty:block/cypress_leaves",
+  "fluff": "betterfoliage_bop:block/cypress_fluff",
+  "tintLeaves": false
+}

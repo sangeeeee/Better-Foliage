@@ -1,0 +1,6 @@
+{
+  "loader": "betterfoliage:leaves",
+  "leaves": "biomesoplenty:block/yellow_maple_leaves",
+  "fluff": "betterfoliage_bop:block/yellow_maple_fluff",
+  "tintLeaves": false
+}
