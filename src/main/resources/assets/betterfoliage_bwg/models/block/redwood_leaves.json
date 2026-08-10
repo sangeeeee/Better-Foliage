@@ -1,0 +1,6 @@
+{
+  "loader": "betterfoliage:leaves",
+  "leaves": "biomeswevegone:block/redwood/leaves",
+  "fluff": "betterfoliage_bwg:block/redwood/fluff",
+  "tintLeaves": false
+}

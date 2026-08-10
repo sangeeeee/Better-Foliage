@@ -1,0 +1,6 @@
+{
+  "loader": "betterfoliage:leaves",
+  "leaves": "biomeswevegone:block/rainbow_eucalyptus/leaves",
+  "fluff": "betterfoliage_bwg:block/rainbow_eucalyptus/fluff",
+  "tintLeaves": false
+}

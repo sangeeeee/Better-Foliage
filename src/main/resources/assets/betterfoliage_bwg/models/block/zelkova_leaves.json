@@ -1,0 +1,6 @@
+{
+  "loader": "betterfoliage:leaves",
+  "leaves": "biomeswevegone:block/zelkova/leaves",
+  "fluff": "betterfoliage_bwg:block/zelkova/fluff",
+  "tintLeaves": false
+}
