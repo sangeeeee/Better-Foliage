@@ -1,0 +1,6 @@
+{
+  "loader": "betterfoliage:leaves",
+  "leaves": "biomeswevegone:block/green_enchanted/leaves",
+  "fluff": "betterfoliage_bwg:block/green_enchanted/fluff",
+  "tintLeaves": false
+}

@@ -1,0 +1,6 @@
+{
+  "loader": "betterfoliage:leaves",
+  "leaves": "biomeswevegone:block/brown_birch_leaves",
+  "fluff": "betterfoliage_bwg:block/brown_birch_fluff",
+  "tintLeaves": false
+}

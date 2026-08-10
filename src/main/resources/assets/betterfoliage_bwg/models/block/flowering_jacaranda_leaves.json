@@ -1,0 +1,6 @@
+{
+  "loader": "betterfoliage:leaves",
+  "leaves": "biomeswevegone:block/flowering_jacaranda_leaves",
+  "fluff": "betterfoliage_bwg:block/flowering_jacaranda_fluff",
+  "tintLeaves": false
+}

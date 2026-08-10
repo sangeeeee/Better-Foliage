@@ -1,0 +1,6 @@
+{
+  "loader": "betterfoliage:leaves",
+  "leaves": "biomeswevegone:block/araucaria_leaves",
+  "fluff": "betterfoliage_bwg:block/araucaria_fluff",
+  "tintLeaves": false
+}

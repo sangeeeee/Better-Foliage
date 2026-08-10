@@ -1,6 +1,0 @@
-{
-  "loader": "betterfoliage:leaves",
-  "leaves": "biomeswevegone:block/red_spruce_leaves",
-  "fluff": "betterfoliage:block/red_spruce_fluff",
-  "tintLeaves": false
-}
