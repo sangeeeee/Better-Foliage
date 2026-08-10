@@ -6,6 +6,7 @@ import com.google.common.base.Suppliers;
 
 import com.eerussianguy.betterfoliage.model.GrassBakedModel;
 import com.eerussianguy.betterfoliage.model.GrassLoader;
+import com.eerussianguy.betterfoliage.model.DirtReedBakedModel;
 import com.eerussianguy.betterfoliage.model.LeavesBakedModel;
 import com.eerussianguy.betterfoliage.model.LeavesLoader;
 import net.neoforged.bus.api.IEventBus;
@@ -14,6 +15,10 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.TextureAtlasStitchedEvent;
 import net.neoforged.neoforge.common.NeoForgeConfig;
+import net.minecraft.client.renderer.block.BlockModelShaper;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.world.level.block.Blocks;
 
 public class EventHandler
 {
@@ -34,6 +39,7 @@ public class EventHandler
     {
         bus.addListener(EventHandler::clientSetup);
         bus.addListener(EventHandler::onModelBake);
+        bus.addListener(EventHandler::onModifyBakingResult);
         bus.addListener(EventHandler::onModelRegister);
         bus.addListener(EventHandler::onLoaderRegister);
         bus.addListener(EventHandler::afterTextureStitch);
@@ -78,5 +84,14 @@ public class EventHandler
         {
             event.register(Helpers.standalone("block/better_reed_" + i));
         }
+    }
+
+    private static void onModifyBakingResult(final ModelEvent.ModifyBakingResult event)
+    {
+        var dirtLocation = BlockModelShaper.stateToModelLocation(Blocks.DIRT.defaultBlockState());
+        event.getModels().computeIfPresent(dirtLocation, (location, model) -> new DirtReedBakedModel(
+            model,
+            texture -> event.getTextureGetter().apply(new Material(TextureAtlas.LOCATION_BLOCKS, texture))
+        ));
     }
 }
