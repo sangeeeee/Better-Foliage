@@ -21,10 +21,11 @@ public class GrassLoader implements IGeometryLoader<GrassModel>
     {
         ResourceLocation dirt = Helpers.requireID(json, "dirt");
         ResourceLocation top = Helpers.requireID(json, "top");
-        ResourceLocation overlay = Helpers.requireID(json, "overlay");
+        ResourceLocation overlay = Helpers.identifierOrEmpty(json, "overlay");
         boolean tint = GsonHelper.getAsBoolean(json, "tint", false);
         ResourceLocation grass = Helpers.identifierOrEmpty(json, "grass");
+        boolean renderReed = GsonHelper.getAsBoolean(json, "renderReed", false);
 
-        return new GrassModel(dirt, top, overlay, tint, grass);
+        return new GrassModel(dirt, top, overlay, tint, grass, renderReed);
     }
 }

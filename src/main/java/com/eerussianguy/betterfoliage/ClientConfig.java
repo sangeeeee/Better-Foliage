@@ -18,6 +18,7 @@ public class ClientConfig
     public final ModConfigSpec.IntValue leavesCacheSize;
     public final ModConfigSpec.DoubleValue leavesVariationDistance;
     public final ModConfigSpec.IntValue extraGrassRarity;
+    public final ModConfigSpec.DoubleValue reedPopulation;
 
     public final ModConfigSpec.BooleanValue forceForgeLighting;
 
@@ -37,6 +38,12 @@ public class ClientConfig
         forceForgeLighting = builder.apply("forceForgeLighting").comment("Force Forge Lighting Pipeline? (should be true when not using Optifine)").define("forceForgeLighting", true);
         extraGrassRarity = builder.apply("extraGrassRarity").comment("Inverse of the rarity of the extra grass. Increase the value to make it less common.").defineInRange("extraGrassRarity", 2, 1, Integer.MAX_VALUE);
 
+        innerBuilder.pop();
+
+        innerBuilder.push("reed");
+        reedPopulation = builder.apply("reed.population")
+            .comment("Chance for better reeds to render on eligible dirt blocks. 0 disables reeds and 1 renders them everywhere eligible.")
+            .defineInRange("population", 0.5D, 0.0D, 1.0D);
         innerBuilder.pop();
     }
 }

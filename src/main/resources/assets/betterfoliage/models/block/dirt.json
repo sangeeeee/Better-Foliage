@@ -1,0 +1,7 @@
+{
+  "loader": "betterfoliage:grass",
+  "dirt": "minecraft:block/dirt",
+  "top": "minecraft:block/dirt",
+  "tint": false,
+  "renderReed": true
+}

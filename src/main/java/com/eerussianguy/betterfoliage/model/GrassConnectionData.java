@@ -9,8 +9,12 @@ public class GrassConnectionData
 
     private final int meta;
     private final boolean up;
+    private final boolean reedEligible;
+    private final float reedPopulationRoll;
+    private final int reedModel;
+    private final int reedLight;
 
-    public GrassConnectionData(boolean north, boolean east, boolean south, boolean west, boolean up)
+    public GrassConnectionData(boolean north, boolean east, boolean south, boolean west, boolean up, boolean reedEligible, float reedPopulationRoll, int reedModel, int reedLight)
     {
         int i = 0;
         if (north)
@@ -24,6 +28,10 @@ public class GrassConnectionData
 
         meta = i;
         this.up = up;
+        this.reedEligible = reedEligible;
+        this.reedPopulationRoll = reedPopulationRoll;
+        this.reedModel = reedModel;
+        this.reedLight = reedLight;
     }
 
     public int get()
@@ -34,6 +42,21 @@ public class GrassConnectionData
     public boolean hasUp()
     {
         return up;
+    }
+
+    public boolean hasReed(double population)
+    {
+        return reedEligible && reedPopulationRoll < population;
+    }
+
+    public int getReedModel()
+    {
+        return reedModel;
+    }
+
+    public int getReedLight()
+    {
+        return reedLight;
     }
 
 }

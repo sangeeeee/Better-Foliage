@@ -74,5 +74,9 @@ public class EventHandler
         event.register(Helpers.standalone("block/better_grass"));
         event.register(Helpers.standalone("block/better_grass_snowed"));
         event.register(Helpers.standalone("block/better_mycelium"));
+        for (int i = 0; i < 4; i++)
+        {
+            event.register(Helpers.standalone("block/better_reed_" + i));
+        }
     }
 }

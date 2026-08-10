@@ -10,11 +10,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.client.model.geometry.IGeometryBakingContext;
 import net.neoforged.neoforge.client.model.geometry.IUnbakedGeometry;
 
-public record GrassModel(ResourceLocation dirt, ResourceLocation top, ResourceLocation overlay, boolean tint, ResourceLocation grassLocation) implements IUnbakedGeometry<GrassModel>
+public record GrassModel(ResourceLocation dirt, ResourceLocation top, ResourceLocation overlay, boolean tint, ResourceLocation grassLocation, boolean renderReed) implements IUnbakedGeometry<GrassModel>
 {
     @Override
     public BakedModel bake(IGeometryBakingContext owner, ModelBaker bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform, ItemOverrides overrides)
     {
-        return new GrassBakedModel(dirt, top, overlay, tint, grassLocation);
+        return new GrassBakedModel(dirt, top, overlay, tint, grassLocation, renderReed);
     }
 }
