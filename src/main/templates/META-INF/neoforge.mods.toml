@@ -16,6 +16,8 @@ A slim port of Better Foliage for 1.16 and beyond.
 
 Most changes are configurable via resource pack.
 '''
+[[mixins]]
+config="betterfoliage.mixins.json"
 [[dependencies.betterfoliage]]
     modId="minecraft"
     type = "optional"

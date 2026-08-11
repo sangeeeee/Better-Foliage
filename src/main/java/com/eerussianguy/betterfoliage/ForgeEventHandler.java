@@ -24,7 +24,9 @@ import net.minecraft.world.phys.Vec3;
 import com.eerussianguy.betterfoliage.particle.LeafParticle;
 import com.eerussianguy.betterfoliage.particle.SoulParticle;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.client.event.AddSectionGeometryEvent;
 import net.neoforged.neoforge.common.NeoForge;
+import com.eerussianguy.betterfoliage.model.WaterPetalRenderer;
 
 public class ForgeEventHandler
 {
@@ -35,6 +37,12 @@ public class ForgeEventHandler
         final var bus = NeoForge.EVENT_BUS;
 
         bus.addListener(ForgeEventHandler::onClientTick);
+        bus.addListener(ForgeEventHandler::onAddSectionGeometry);
+    }
+
+    private static void onAddSectionGeometry(AddSectionGeometryEvent event)
+    {
+        WaterPetalRenderer.addSectionGeometry(event);
     }
 
     public static void clearCache()

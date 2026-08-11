@@ -19,6 +19,7 @@ public class ClientConfig
     public final ModConfigSpec.DoubleValue leavesVariationDistance;
     public final ModConfigSpec.IntValue extraGrassRarity;
     public final ModConfigSpec.DoubleValue reedPopulation;
+    public final ModConfigSpec.DoubleValue waterPetalPopulation;
 
     public final ModConfigSpec.BooleanValue forceForgeLighting;
 
@@ -43,6 +44,13 @@ public class ClientConfig
         innerBuilder.push("reed");
         reedPopulation = builder.apply("reed.population")
             .comment("Chance for better reeds to render on eligible dirt blocks. 0 disables reeds and 1 renders them everywhere eligible.")
+            .defineInRange("population", 0.5D, 0.0D, 1.0D);
+        innerBuilder.pop();
+
+        innerBuilder.push("waterPetals");
+        waterPetalPopulation = builder.apply("waterPetals.population")
+            .comment("Chance for water-surface cherry petals to render below vanilla cherry leaves. 0 disables them and 1 renders them on every eligible water block.")
+            .worldRestart()
             .defineInRange("population", 0.5D, 0.0D, 1.0D);
         innerBuilder.pop();
     }
