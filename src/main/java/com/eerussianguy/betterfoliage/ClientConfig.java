@@ -51,7 +51,7 @@ public class ClientConfig
         waterPetalPopulation = builder.apply("waterPetals.population")
             .comment("Chance for water-surface cherry petals to render below vanilla cherry leaves. 0 disables them and 1 renders them on every eligible water block.")
             .worldRestart()
-            .defineInRange("population", 0.5D, 0.0D, 1.0D);
+            .defineInRange("population", 0.625D, 0.0D, 1.0D);
         innerBuilder.pop();
     }
 }

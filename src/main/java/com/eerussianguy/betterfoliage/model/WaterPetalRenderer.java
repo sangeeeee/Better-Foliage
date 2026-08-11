@@ -31,6 +31,7 @@ import net.neoforged.neoforge.client.event.AddSectionGeometryEvent;
 public final class WaterPetalRenderer
 {
     private static final int SEARCH_DEPTH = 10;
+    private static final int MIN_FALL_DISTANCE = 2;
     private static final float SURFACE_EPSILON = 0.002F;
     private static final float MAX_OFFSET = 0.03125F;
     private static final long RANDOM_SALT = 0xBB67AE8584CAA73BL;
@@ -117,14 +118,18 @@ public final class WaterPetalRenderer
                     final ResourceLocation petalTexture = leafTextures.get(state.getBlock());
                     if (petalTexture != null)
                     {
-                        if (candidateWaterY != Integer.MIN_VALUE && y - candidateWaterY <= SEARCH_DEPTH)
+                        if (candidateWaterY != Integer.MIN_VALUE)
                         {
-                            final long randomBits = mix64(BlockPos.asLong(worldX, candidateWaterY, worldZ) ^ RANDOM_SALT);
-                            if (unitFloat(randomBits) < population)
+                            final int fallDistance = y - candidateWaterY;
+                            if (fallDistance >= MIN_FALL_DISTANCE && fallDistance <= SEARCH_DEPTH)
                             {
-                                cursor.set(worldX, candidateWaterY + 1, worldZ);
-                                final int light = LevelRenderer.getLightColor(level, cursor);
-                                patches.add(createPatch(localX, candidateWaterY - origin.getY(), localZ, candidateSurfaceHeight, light, randomBits, petalTexture));
+                                final long randomBits = mix64(BlockPos.asLong(worldX, candidateWaterY, worldZ) ^ RANDOM_SALT);
+                                if (unitFloat(randomBits) < population)
+                                {
+                                    cursor.set(worldX, candidateWaterY + 1, worldZ);
+                                    final int light = LevelRenderer.getLightColor(level, cursor);
+                                    patches.add(createPatch(localX, candidateWaterY - origin.getY(), localZ, candidateSurfaceHeight, light, randomBits, petalTexture));
+                                }
                             }
                         }
 
