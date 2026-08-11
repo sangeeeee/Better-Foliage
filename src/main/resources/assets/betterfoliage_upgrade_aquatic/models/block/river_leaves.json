@@ -1,0 +1,6 @@
+{
+  "loader": "betterfoliage:leaves",
+  "leaves": "upgrade_aquatic:block/river_leaves",
+  "fluff": "betterfoliage_upgrade_aquatic:block/river_leaves_fluff",
+  "tintLeaves": true
+}
