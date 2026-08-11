@@ -1,7 +1,9 @@
 package com.eerussianguy.betterfoliage.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 
 import com.eerussianguy.betterfoliage.BFConfig;
@@ -13,26 +15,32 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.SectionPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.material.FluidState;
 import net.neoforged.neoforge.client.event.AddSectionGeometryEvent;
 
-/** Renders purely client-side vanilla pink-petal quads on water below vanilla cherry leaves. */
+/** Renders purely client-side petal quads on water below supported cherry leaves. */
 public final class WaterPetalRenderer
 {
     private static final int SEARCH_DEPTH = 10;
     private static final float SURFACE_EPSILON = 0.002F;
     private static final float MAX_OFFSET = 0.03125F;
     private static final long RANDOM_SALT = 0xBB67AE8584CAA73BL;
-    private static final ResourceLocation PETAL_TEXTURE = ResourceLocation.fromNamespaceAndPath("minecraft", "block/pink_petals");
+    private static final ResourceLocation VANILLA_PETAL_TEXTURE = ResourceLocation.fromNamespaceAndPath("minecraft", "block/pink_petals");
+    private static final ResourceLocation BWG_YELLOW_LEAVES = ResourceLocation.fromNamespaceAndPath("biomeswevegone", "yellow_sakura_leaves");
+    private static final ResourceLocation BWG_WHITE_LEAVES = ResourceLocation.fromNamespaceAndPath("biomeswevegone", "white_sakura_leaves");
+    private static final ResourceLocation BWG_YELLOW_PETAL_TEXTURE = ResourceLocation.fromNamespaceAndPath("biomeswevegone", "block/yellow_sakura_petals");
+    private static final ResourceLocation BWG_WHITE_PETAL_TEXTURE = ResourceLocation.fromNamespaceAndPath("biomeswevegone", "block/white_sakura_petals");
     private static final RenderType RENDER_TYPE = RenderType.cutoutMipped();
-    private static final Predicate<BlockState> IS_CHERRY_LEAVES = state -> state.is(Blocks.CHERRY_LEAVES);
+    private static volatile Map<Block, ResourceLocation> supportedLeaves;
 
     private WaterPetalRenderer()
     {
@@ -48,23 +56,29 @@ public final class WaterPetalRenderer
         }
 
         final BlockPos origin = event.getSectionOrigin();
-        final List<PetalPatch> patches = collectPatches(event.getLevel(), origin, population);
+        final Map<Block, ResourceLocation> leafTextures = supportedLeaves();
+        final List<PetalPatch> patches = collectPatches(event.getLevel(), origin, population, leafTextures);
         if (patches.isEmpty())
         {
             return;
         }
 
-        // Resolve the currently active minecraft:pink_petals sprite. Resource-pack replacements are honored.
-        final TextureAtlasSprite sprite = Helpers.getTexture(PETAL_TEXTURE);
+        // Resolve active atlas sprites only for leaf types that actually produced patches. Resource-pack replacements are honored.
+        final Map<ResourceLocation, TextureAtlasSprite> sprites = new HashMap<>();
+        for (PetalPatch patch : patches)
+        {
+            sprites.computeIfAbsent(patch.texture(), Helpers::getTexture);
+        }
         final List<PetalPatch> immutablePatches = List.copyOf(patches);
-        event.addRenderer(context -> render(immutablePatches, sprite, context));
+        final Map<ResourceLocation, TextureAtlasSprite> immutableSprites = Map.copyOf(sprites);
+        event.addRenderer(context -> render(immutablePatches, immutableSprites, context));
     }
 
     /**
      * Scans each of the section's 256 vertical columns once. The nearest non-air block is tracked while moving upward,
      * so the cost is bounded to at most 26 state reads per column instead of checking ten blocks above every water block.
      */
-    private static List<PetalPatch> collectPatches(Level level, BlockPos origin, double population)
+    private static List<PetalPatch> collectPatches(Level level, BlockPos origin, double population, Map<Block, ResourceLocation> leafTextures)
     {
         final int waterMinY = Math.max(origin.getY(), level.getMinBuildHeight());
         final int waterMaxY = Math.min(origin.getY() + 15, level.getMaxBuildHeight() - 1);
@@ -74,7 +88,7 @@ public final class WaterPetalRenderer
         }
 
         final int scanMaxY = Math.min(waterMaxY + SEARCH_DEPTH, level.getMaxBuildHeight() - 1);
-        if (!mayContainCherryLeaves(level, origin, waterMinY, scanMaxY))
+        if (!mayContainSupportedLeaves(level, origin, waterMinY, scanMaxY, leafTextures))
         {
             return List.of();
         }
@@ -100,7 +114,8 @@ public final class WaterPetalRenderer
                         continue;
                     }
 
-                    if (state.is(Blocks.CHERRY_LEAVES))
+                    final ResourceLocation petalTexture = leafTextures.get(state.getBlock());
+                    if (petalTexture != null)
                     {
                         if (candidateWaterY != Integer.MIN_VALUE && y - candidateWaterY <= SEARCH_DEPTH)
                         {
@@ -109,7 +124,7 @@ public final class WaterPetalRenderer
                             {
                                 cursor.set(worldX, candidateWaterY + 1, worldZ);
                                 final int light = LevelRenderer.getLightColor(level, cursor);
-                                patches.add(createPatch(localX, candidateWaterY - origin.getY(), localZ, candidateSurfaceHeight, light, randomBits));
+                                patches.add(createPatch(localX, candidateWaterY - origin.getY(), localZ, candidateSurfaceHeight, light, randomBits, petalTexture));
                             }
                         }
 
@@ -133,14 +148,15 @@ public final class WaterPetalRenderer
         return patches;
     }
 
-    private static boolean mayContainCherryLeaves(Level level, BlockPos origin, int minY, int maxY)
+    private static boolean mayContainSupportedLeaves(Level level, BlockPos origin, int minY, int maxY, Map<Block, ResourceLocation> leafTextures)
     {
         final LevelChunk chunk = level.getChunkAt(origin);
         final int minIndex = chunk.getSectionIndex(minY);
         final int maxIndex = chunk.getSectionIndex(maxY);
+        final Predicate<BlockState> isSupportedLeaves = state -> leafTextures.containsKey(state.getBlock());
         for (int index = minIndex; index <= maxIndex; index++)
         {
-            if (chunk.getSection(index).maybeHas(IS_CHERRY_LEAVES))
+            if (chunk.getSection(index).maybeHas(isSupportedLeaves))
             {
                 return true;
             }
@@ -148,22 +164,23 @@ public final class WaterPetalRenderer
         return false;
     }
 
-    private static PetalPatch createPatch(int localX, int localY, int localZ, float surfaceHeight, int light, long populationBits)
+    private static PetalPatch createPatch(int localX, int localY, int localZ, float surfaceHeight, int light, long populationBits, ResourceLocation texture)
     {
         final long variantBits = mix64(populationBits);
         final int quadrantMask = 1 + (int) Long.remainderUnsigned(variantBits, 15L);
         final int rotation = (int) ((variantBits >>> 8) & 3L);
         final float xOffset = byteOffset(variantBits >>> 16);
         final float zOffset = byteOffset(variantBits >>> 24);
-        return new PetalPatch(localX, localY + surfaceHeight + SURFACE_EPSILON, localZ, quadrantMask, rotation, xOffset, zOffset, light);
+        return new PetalPatch(localX, localY + surfaceHeight + SURFACE_EPSILON, localZ, quadrantMask, rotation, xOffset, zOffset, light, texture);
     }
 
-    private static void render(List<PetalPatch> patches, TextureAtlasSprite sprite, AddSectionGeometryEvent.SectionRenderingContext context)
+    private static void render(List<PetalPatch> patches, Map<ResourceLocation, TextureAtlasSprite> sprites, AddSectionGeometryEvent.SectionRenderingContext context)
     {
         final VertexConsumer consumer = context.getOrCreateChunkBuffer(RENDER_TYPE);
         final PoseStack.Pose pose = context.getPoseStack().last();
         for (PetalPatch patch : patches)
         {
+            final TextureAtlasSprite sprite = sprites.get(patch.texture());
             for (int quadrant = 0; quadrant < 4; quadrant++)
             {
                 if ((patch.quadrantMask() & (1 << quadrant)) != 0)
@@ -233,9 +250,9 @@ public final class WaterPetalRenderer
             return;
         }
 
-        final boolean oldCherry = oldState.is(Blocks.CHERRY_LEAVES);
-        final boolean newCherry = newState.is(Blocks.CHERRY_LEAVES);
-        if (oldCherry != newCherry)
+        final boolean oldSupportedLeaves = isSupportedLeaves(oldState);
+        final boolean newSupportedLeaves = isSupportedLeaves(newState);
+        if (oldSupportedLeaves != newSupportedLeaves)
         {
             markFirstWaterBelow(renderer, level, pos, SEARCH_DEPTH);
             return;
@@ -257,7 +274,7 @@ public final class WaterPetalRenderer
             {
                 continue;
             }
-            if (state.is(Blocks.CHERRY_LEAVES))
+            if (isSupportedLeaves(state))
             {
                 leafDistance = distance;
             }
@@ -303,6 +320,35 @@ public final class WaterPetalRenderer
         return state.is(Blocks.WATER) && state.getFluidState().isSource();
     }
 
+    private static boolean isSupportedLeaves(BlockState state)
+    {
+        return supportedLeaves().containsKey(state.getBlock());
+    }
+
+    private static Map<Block, ResourceLocation> supportedLeaves()
+    {
+        Map<Block, ResourceLocation> result = supportedLeaves;
+        if (result == null)
+        {
+            synchronized (WaterPetalRenderer.class)
+            {
+                result = supportedLeaves;
+                if (result == null)
+                {
+                    final Map<Block, ResourceLocation> discovered = new HashMap<>();
+                    discovered.put(Blocks.CHERRY_LEAVES, VANILLA_PETAL_TEXTURE);
+                    BuiltInRegistries.BLOCK.getOptional(BWG_YELLOW_LEAVES)
+                        .ifPresent(block -> discovered.put(block, BWG_YELLOW_PETAL_TEXTURE));
+                    BuiltInRegistries.BLOCK.getOptional(BWG_WHITE_LEAVES)
+                        .ifPresent(block -> discovered.put(block, BWG_WHITE_PETAL_TEXTURE));
+                    result = Map.copyOf(discovered);
+                    supportedLeaves = result;
+                }
+            }
+        }
+        return result;
+    }
+
     private static float unitFloat(long value)
     {
         return (float) (value >>> 40) * 0x1.0p-24F;
@@ -320,7 +366,7 @@ public final class WaterPetalRenderer
         return value ^ (value >>> 31);
     }
 
-    private record PetalPatch(float localX, float localY, float localZ, int quadrantMask, int rotation, float xOffset, float zOffset, int light)
+    private record PetalPatch(float localX, float localY, float localZ, int quadrantMask, int rotation, float xOffset, float zOffset, int light, ResourceLocation texture)
     {
     }
 }
