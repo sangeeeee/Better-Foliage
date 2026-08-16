@@ -4,10 +4,8 @@ import java.util.function.Supplier;
 
 import com.google.common.base.Suppliers;
 
-import com.eerussianguy.betterfoliage.model.GrassBakedModel;
 import com.eerussianguy.betterfoliage.model.GrassLoader;
 import com.eerussianguy.betterfoliage.model.DirtReedBakedModel;
-import com.eerussianguy.betterfoliage.model.LeavesBakedModel;
 import com.eerussianguy.betterfoliage.model.LeavesLoader;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModList;
@@ -38,7 +36,6 @@ public class EventHandler
     public static void init(IEventBus bus)
     {
         bus.addListener(EventHandler::clientSetup);
-        bus.addListener(EventHandler::onModelBake);
         bus.addListener(EventHandler::onModifyBakingResult);
         bus.addListener(EventHandler::onModelRegister);
         bus.addListener(EventHandler::onLoaderRegister);
@@ -56,12 +53,6 @@ public class EventHandler
         {
             BetterFoliage.LEAVES_DISABLED_BY_MOD = true;
         }
-    }
-
-    private static void onModelBake(final ModelEvent.BakingCompleted event)
-    {
-        LeavesBakedModel.INSTANCES.forEach(LeavesBakedModel::init);
-        GrassBakedModel.INSTANCES.forEach(GrassBakedModel::init);
     }
 
     private static void afterTextureStitch(final TextureAtlasStitchedEvent event)

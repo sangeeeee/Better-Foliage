@@ -1,6 +1,7 @@
 package com.eerussianguy.betterfoliage.model;
 
 import java.util.*;
+import java.util.function.Function;
 
 import com.google.common.collect.Maps;
 import net.minecraft.client.Minecraft;
@@ -30,52 +31,35 @@ import org.joml.Vector3f;
 
 public class GrassBakedModel extends BFBakedModel
 {
-    public static List<GrassBakedModel> INSTANCES = new ArrayList<>();
     public static final ChunkRenderTypeSet RENDER_TYPES = ChunkRenderTypeSet.of(RenderType.cutout());
 
     private final BlockModel blockModel;
 
-    private final ResourceLocation dirt;
-    private final ResourceLocation top;
-    private final ResourceLocation overlay;
     private final boolean hasOverlay;
     private final ModelResourceLocation grass;
     private final boolean tint;
     private final boolean renderReed;
 
-    @Nullable private TextureAtlasSprite dirtTex;
-    @Nullable private TextureAtlasSprite topTex;
-    @Nullable private TextureAtlasSprite overlayTex;
+    private final TextureAtlasSprite dirtTex;
+    private final TextureAtlasSprite topTex;
+    @Nullable private final TextureAtlasSprite overlayTex;
 
     private final BakedModel[] models = new BakedModel[16];
-    @Nullable private ReedBakedModelSet reedModels;
+    @Nullable private final ReedBakedModelSet reedModels;
 
-    public GrassBakedModel(ResourceLocation dirt, ResourceLocation top, ResourceLocation overlay, boolean tint, ResourceLocation grass, boolean renderReed)
+    public GrassBakedModel(ResourceLocation dirt, ResourceLocation top, ResourceLocation overlay, boolean tint, ResourceLocation grass, boolean renderReed, Function<ResourceLocation, TextureAtlasSprite> spriteGetter)
     {
         this.blockModel = new BlockModel(null, new ArrayList<>(), new HashMap<>(), false, BlockModel.GuiLight.FRONT, ItemTransforms.NO_TRANSFORMS, new ArrayList<>());
 
-        this.dirt = dirt;
-        this.top = top;
-        this.overlay = overlay;
         this.hasOverlay = !overlay.equals(Helpers.EMPTY);
         this.tint = tint;
         this.grass = ModelResourceLocation.standalone(grass);
         this.renderReed = renderReed;
-
-        INSTANCES.add(this);
-    }
-
-    public void init()
-    {
-        dirtTex = Helpers.getTexture(dirt);
-        topTex = Helpers.getTexture(top);
-        overlayTex = hasOverlay ? Helpers.getTexture(overlay) : null;
-
+        this.dirtTex = spriteGetter.apply(dirt);
+        this.topTex = spriteGetter.apply(top);
+        this.overlayTex = hasOverlay ? spriteGetter.apply(overlay) : null;
         generateModels();
-        if (renderReed)
-        {
-            reedModels = new ReedBakedModelSet(Helpers::getTexture);
-        }
+        this.reedModels = renderReed ? new ReedBakedModelSet(spriteGetter) : null;
     }
 
     private BlockElement buildCore()
@@ -101,7 +85,6 @@ public class GrassBakedModel extends BFBakedModel
                 mapFacesIn.put(d, (d != Direction.DOWN && tint) ? Helpers.makeTintedFace(faceUV) : Helpers.makeFace(faceUV));
             }
             BlockElement part = new BlockElement(new Vector3f(0f, 0f, 0f), new Vector3f(16f, 16f, 16f), mapFacesIn, null, true);
-            assert topTex != null;
             SimpleBakedModel.Builder builder = new SimpleBakedModel.Builder(blockModel, ItemOverrides.EMPTY, false).particle(topTex);
 
             final int fMeta = meta;
@@ -189,7 +172,7 @@ public class GrassBakedModel extends BFBakedModel
     @Override
     public TextureAtlasSprite getParticleIcon()
     {
-        return Objects.requireNonNull(dirtTex);
+        return dirtTex;
     }
 
     @Override

@@ -4,6 +4,7 @@ import java.util.function.Function;
 
 
 import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.*;
 import net.minecraft.resources.ResourceLocation;
@@ -15,6 +16,7 @@ public record GrassModel(ResourceLocation dirt, ResourceLocation top, ResourceLo
     @Override
     public BakedModel bake(IGeometryBakingContext owner, ModelBaker bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform, ItemOverrides overrides)
     {
-        return new GrassBakedModel(dirt, top, overlay, tint, grassLocation, renderReed);
+        Function<ResourceLocation, TextureAtlasSprite> textureGetter = texture -> spriteGetter.apply(new Material(TextureAtlas.LOCATION_BLOCKS, texture));
+        return new GrassBakedModel(dirt, top, overlay, tint, grassLocation, renderReed, textureGetter);
     }
 }

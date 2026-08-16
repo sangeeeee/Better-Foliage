@@ -1,6 +1,7 @@
 package com.eerussianguy.betterfoliage.model;
 
 import java.util.*;
+import java.util.function.Function;
 
 import com.google.common.collect.Maps;
 import net.minecraft.client.renderer.RenderType;
@@ -26,49 +27,29 @@ import org.joml.Vector3f;
 
 public class LeavesBakedModel extends BFBakedModel
 {
-    public static List<LeavesBakedModel> INSTANCES = new ArrayList<>();
-
-    private final ResourceLocation leaves;
-    private final ResourceLocation fluff;
-    private final ResourceLocation overlay;
     private final boolean isOverlay;
-    private final boolean tintOverlay;
     private final boolean tintLeaves;
 
-    @Nullable private TextureAtlasSprite leavesTex;
-    @Nullable private TextureAtlasSprite fluffTex;
+    private final TextureAtlasSprite leavesTex;
+    private final TextureAtlasSprite fluffTex;
 
     private final BlockModel blockModel;
-    private final BakedModel[] crosses = new BakedModel[(int) Math.pow(BFConfig.CLIENT.leavesCacheSize.get(), 3)];
+    private final BakedModel[] crosses;
 
-    @Nullable private BakedModel core;
-    @Nullable private BakedModel outerCore;
+    private final BakedModel core;
+    @Nullable private final BakedModel outerCore;
 
-    public LeavesBakedModel(ResourceLocation leaves, ResourceLocation fluff, ResourceLocation overlay, boolean tintLeaves, boolean tintOverlay)
+    public LeavesBakedModel(ResourceLocation leaves, ResourceLocation fluff, ResourceLocation overlay, boolean tintLeaves, boolean tintOverlay, Function<ResourceLocation, TextureAtlasSprite> spriteGetter)
     {
         this.blockModel = new BlockModel(null, new ArrayList<>(), new HashMap<>(), false, BlockModel.GuiLight.FRONT, ItemTransforms.NO_TRANSFORMS, new ArrayList<>());
 
-        this.leaves = leaves;
-        this.fluff = fluff;
-        this.overlay = overlay;
         this.isOverlay = !overlay.equals(Helpers.EMPTY);
         this.tintLeaves = tintLeaves;
-        this.tintOverlay = tintOverlay;
-
-        INSTANCES.add(this);
-    }
-
-    public void init()
-    {
-        leavesTex = Helpers.getTexture(leaves);
-        fluffTex = Helpers.getTexture(fluff);
-        if (isOverlay)
-        {
-            TextureAtlasSprite overlayTex = Helpers.getTexture(overlay);
-            outerCore = buildBlock(overlayTex, tintOverlay);
-        }
-        assert leavesTex != null;
-        core = buildBlock(leavesTex, tintLeaves);
+        this.leavesTex = spriteGetter.apply(leaves);
+        this.fluffTex = spriteGetter.apply(fluff);
+        this.crosses = new BakedModel[(int) Math.pow(BFConfig.CLIENT.leavesCacheSize.get(), 3)];
+        this.core = buildBlock(leavesTex, tintLeaves);
+        this.outerCore = isOverlay ? buildBlock(spriteGetter.apply(overlay), tintOverlay) : null;
         buildCrosses();
     }
 
@@ -108,7 +89,6 @@ public class LeavesBakedModel extends BFBakedModel
         BlockElement part = new BlockElement(from, to, mapFacesIn, makeRotation(45f), false);
         BlockElement partR = new BlockElement(from, to, mapFacesIn, makeRotation(-45f), false);
 
-        assert leavesTex != null;
         SimpleBakedModel.Builder builder = new SimpleBakedModel.Builder(blockModel, ItemOverrides.EMPTY, false).particle(leavesTex);
         Helpers.assembleFaces(builder, part, fluffTex);
         Helpers.assembleFaces(builder, partR, fluffTex);
@@ -144,7 +124,6 @@ public class LeavesBakedModel extends BFBakedModel
     @NotNull
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource rand, ModelData extraData, @Nullable RenderType renderType)
     {
-        assert core != null;
         List<BakedQuad> coreQuads = core.getQuads(state, side, rand, extraData, renderType);
         if (state != null)
         {
@@ -156,8 +135,7 @@ public class LeavesBakedModel extends BFBakedModel
                 quads.addAll(crossQuads);
                 if (isOverlay)
                 {
-                    assert outerCore != null;
-                    List<BakedQuad> outQuads = outerCore.getQuads(state, side, rand, extraData, renderType);
+                    List<BakedQuad> outQuads = Objects.requireNonNull(outerCore).getQuads(state, side, rand, extraData, renderType);
                     quads.addAll(outQuads);
                 }
                 return quads;
@@ -176,7 +154,7 @@ public class LeavesBakedModel extends BFBakedModel
     @Override
     public TextureAtlasSprite getParticleIcon()
     {
-        return Objects.requireNonNull(leavesTex);
+        return leavesTex;
     }
 
     @Override

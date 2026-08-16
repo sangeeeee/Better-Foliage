@@ -3,6 +3,7 @@ package com.eerussianguy.betterfoliage.model;
 import java.util.function.Function;
 
 import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.*;
 import net.minecraft.resources.ResourceLocation;
@@ -14,7 +15,8 @@ public record LeavesModel(ResourceLocation leaves, ResourceLocation fluff, Resou
     @Override
     public BakedModel bake(IGeometryBakingContext owner, ModelBaker bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform, ItemOverrides overrides)
     {
-        return new LeavesBakedModel(leaves, fluff, overlay, tintLeaves, tintOverlay);
+        Function<ResourceLocation, TextureAtlasSprite> textureGetter = texture -> spriteGetter.apply(new Material(TextureAtlas.LOCATION_BLOCKS, texture));
+        return new LeavesBakedModel(leaves, fluff, overlay, tintLeaves, tintOverlay, textureGetter);
     }
 
 }
