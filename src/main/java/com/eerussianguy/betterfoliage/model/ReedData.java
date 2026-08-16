@@ -15,6 +15,7 @@ public record ReedData(boolean eligible, float populationRoll, int model, int li
 {
     public static final ModelProperty<ReedData> PROPERTY = new ModelProperty<>();
     private static final long RANDOM_SALT = 0x6A09E667F3BCC909L;
+    private static final int LIGHT_BRIGHTNESS_BOOST = 1;
 
     public static ReedData create(BlockAndTintGetter level, BlockPos pos)
     {
@@ -50,11 +51,16 @@ public record ReedData(boolean eligible, float populationRoll, int model, int li
             int waterLight = LevelRenderer.getLightColor(level, waterState, waterPos);
             int airLight = LevelRenderer.getLightColor(level, airState, airPos);
             light = LightTexture.pack(
-                Math.max(LightTexture.block(waterLight), LightTexture.block(airLight)),
-                Math.max(LightTexture.sky(waterLight), LightTexture.sky(airLight))
+                boostedLight(Math.max(LightTexture.block(waterLight), LightTexture.block(airLight))),
+                boostedLight(Math.max(LightTexture.sky(waterLight), LightTexture.sky(airLight)))
             );
         }
         return new ReedData(eligible, populationRoll, model, light);
+    }
+
+    private static int boostedLight(int light)
+    {
+        return Math.min(15, light + LIGHT_BRIGHTNESS_BOOST);
     }
 
     public boolean shouldRender(double population)
