@@ -1,0 +1,6 @@
+{
+  "loader": "betterfoliage:leaves",
+  "leaves": "regions_unexplored:block/blackwood_leaves",
+  "fluff": "betterfoliage_regions_unexplored:block/blackwood_fluff",
+  "tintLeaves": false
+}

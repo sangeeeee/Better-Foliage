@@ -1,0 +1,6 @@
+{
+  "loader": "betterfoliage:leaves",
+  "leaves": "regions_unexplored:block/red_maple_leaves",
+  "fluff": "betterfoliage_regions_unexplored:block/red_maple_fluff",
+  "tintLeaves": false
+}

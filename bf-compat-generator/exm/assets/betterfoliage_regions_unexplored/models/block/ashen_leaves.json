@@ -1,0 +1,6 @@
+{
+  "loader": "betterfoliage:leaves",
+  "leaves": "regions_unexplored:block/ashen_leaves",
+  "fluff": "betterfoliage_regions_unexplored:block/ashen_fluff",
+  "tintLeaves": false
+}

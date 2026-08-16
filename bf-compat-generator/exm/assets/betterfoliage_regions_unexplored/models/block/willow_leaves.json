@@ -1,0 +1,6 @@
+{
+  "loader": "betterfoliage:leaves",
+  "leaves": "regions_unexplored:block/willow_leaves",
+  "fluff": "betterfoliage_regions_unexplored:block/willow_fluff",
+  "tintLeaves": true
+}

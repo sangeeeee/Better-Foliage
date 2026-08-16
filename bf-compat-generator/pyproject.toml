@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "betterfoliage-compat-generator"
+version = "0.1.0"
+description = "Generate Better Foliage compatibility resource packs from Minecraft mod JARs"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["Pillow>=10.0"]
+
+[project.scripts]
+bf-compat-generator = "bf_compat_generator.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+

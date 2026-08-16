@@ -1,0 +1,485 @@
+{
+  "input": "D:\\Workspace\\Java\\MC Mods\\Better-Foliage\\bf-compat-generator\\regions-unexplored.jar",
+  "generated_namespaces": {
+    "regions_unexplored": {
+      "generated_namespace": "betterfoliage_regions_unexplored",
+      "textures": [
+        {
+          "source": "regions_unexplored:block/alpha_oak_leaves",
+          "fluff": "betterfoliage_regions_unexplored:block/alpha_oak_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "regions_unexplored:block/ashen_leaves",
+          "fluff": "betterfoliage_regions_unexplored:block/ashen_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "regions_unexplored:block/bamboo_leaves",
+          "fluff": "betterfoliage_regions_unexplored:block/bamboo_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "regions_unexplored:block/bamboo_log_leaves",
+          "fluff": "betterfoliage_regions_unexplored:block/bamboo_log_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "regions_unexplored:block/baobab_leaves",
+          "fluff": "betterfoliage_regions_unexplored:block/baobab_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": true,
+          "animated": false
+        },
+        {
+          "source": "regions_unexplored:block/blackwood_leaves",
+          "fluff": "betterfoliage_regions_unexplored:block/blackwood_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "regions_unexplored:block/blue_magnolia_leaves",
+          "fluff": "betterfoliage_regions_unexplored:block/blue_magnolia_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "regions_unexplored:block/brimwood_leaves",
+          "fluff": "betterfoliage_regions_unexplored:block/brimwood_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "regions_unexplored:block/cypress_leaves",
+          "fluff": "betterfoliage_regions_unexplored:block/cypress_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": true,
+          "animated": false
+        },
+        {
+          "source": "regions_unexplored:block/dead_leaves",
+          "fluff": "betterfoliage_regions_unexplored:block/dead_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "regions_unexplored:block/dead_pine_leaves",
+          "fluff": "betterfoliage_regions_unexplored:block/dead_pine_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "regions_unexplored:block/enchanted_birch_leaves",
+          "fluff": "betterfoliage_regions_unexplored:block/enchanted_birch_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "regions_unexplored:block/eucalyptus_leaves",
+          "fluff": "betterfoliage_regions_unexplored:block/eucalyptus_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": true,
+          "animated": false
+        },
+        {
+          "source": "regions_unexplored:block/golden_larch_leaves",
+          "fluff": "betterfoliage_regions_unexplored:block/golden_larch_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "regions_unexplored:block/kapok_leaves",
+          "fluff": "betterfoliage_regions_unexplored:block/kapok_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": true,
+          "animated": false
+        },
+        {
+          "source": "regions_unexplored:block/larch_leaves",
+          "fluff": "betterfoliage_regions_unexplored:block/larch_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "regions_unexplored:block/magnolia_leaves",
+          "fluff": "betterfoliage_regions_unexplored:block/magnolia_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": true,
+          "animated": false
+        },
+        {
+          "source": "regions_unexplored:block/maple_leaves",
+          "fluff": "betterfoliage_regions_unexplored:block/maple_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": true,
+          "animated": false
+        },
+        {
+          "source": "regions_unexplored:block/orange_maple_leaves",
+          "fluff": "betterfoliage_regions_unexplored:block/orange_maple_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "regions_unexplored:block/pine_leaves",
+          "fluff": "betterfoliage_regions_unexplored:block/pine_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": true,
+          "animated": false
+        },
+        {
+          "source": "regions_unexplored:block/pink_magnolia_leaves",
+          "fluff": "betterfoliage_regions_unexplored:block/pink_magnolia_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "regions_unexplored:block/red_maple_leaves",
+          "fluff": "betterfoliage_regions_unexplored:block/red_maple_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "regions_unexplored:block/redwood_leaves",
+          "fluff": "betterfoliage_regions_unexplored:block/redwood_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": true,
+          "animated": false
+        },
+        {
+          "source": "regions_unexplored:block/silver_birch_leaves",
+          "fluff": "betterfoliage_regions_unexplored:block/silver_birch_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "regions_unexplored:block/socotra_leaves",
+          "fluff": "betterfoliage_regions_unexplored:block/socotra_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": true,
+          "animated": false
+        },
+        {
+          "source": "regions_unexplored:block/white_magnolia_leaves",
+          "fluff": "betterfoliage_regions_unexplored:block/white_magnolia_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "regions_unexplored:block/willow_leaves",
+          "fluff": "betterfoliage_regions_unexplored:block/willow_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": true,
+          "animated": false
+        },
+        {
+          "source": "regions_unexplored:block/wisteria_leaves",
+          "fluff": "betterfoliage_regions_unexplored:block/wisteria_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        }
+      ],
+      "blockstates": [
+        "regions_unexplored:alpha_leaves",
+        "regions_unexplored:ashen_leaves",
+        "regions_unexplored:bamboo_leaves",
+        "regions_unexplored:bamboo_log",
+        "regions_unexplored:bamboo_log_leaves",
+        "regions_unexplored:baobab_leaves",
+        "regions_unexplored:blackwood_leaves",
+        "regions_unexplored:blue_magnolia_leaves",
+        "regions_unexplored:brimwood_leaves",
+        "regions_unexplored:cypress_leaves",
+        "regions_unexplored:dead_leaves",
+        "regions_unexplored:dead_pine_leaves",
+        "regions_unexplored:enchanted_birch_leaves",
+        "regions_unexplored:eucalyptus_leaves",
+        "regions_unexplored:golden_larch_leaves",
+        "regions_unexplored:kapok_leaves",
+        "regions_unexplored:larch_leaves",
+        "regions_unexplored:lavender_wisteria_leaves",
+        "regions_unexplored:magnolia_leaves",
+        "regions_unexplored:maple_leaves",
+        "regions_unexplored:orange_maple_leaves",
+        "regions_unexplored:pine_leaves",
+        "regions_unexplored:pink_magnolia_leaves",
+        "regions_unexplored:red_maple_leaves",
+        "regions_unexplored:redwood_leaves",
+        "regions_unexplored:salmon_wisteria_leaves",
+        "regions_unexplored:silver_birch_leaves",
+        "regions_unexplored:sky_wisteria_leaves",
+        "regions_unexplored:socotra_leaves",
+        "regions_unexplored:white_magnolia_leaves",
+        "regions_unexplored:willow_leaves",
+        "regions_unexplored:wisteria_leaves"
+      ],
+      "models": [
+        {
+          "source": "regions_unexplored:block/alpha_leaves",
+          "generated": "betterfoliage_regions_unexplored:block/alpha_leaves",
+          "texture": "regions_unexplored:block/alpha_oak_leaves"
+        },
+        {
+          "source": "regions_unexplored:block/ashen_leaves",
+          "generated": "betterfoliage_regions_unexplored:block/ashen_leaves",
+          "texture": "regions_unexplored:block/ashen_leaves"
+        },
+        {
+          "source": "regions_unexplored:block/bamboo_leaves",
+          "generated": "betterfoliage_regions_unexplored:block/bamboo_leaves",
+          "texture": "regions_unexplored:block/bamboo_leaves"
+        },
+        {
+          "source": "regions_unexplored:block/bamboo_log_leaves",
+          "generated": "betterfoliage_regions_unexplored:block/bamboo_log_leaves",
+          "texture": "regions_unexplored:block/bamboo_log_leaves"
+        },
+        {
+          "source": "regions_unexplored:block/baobab_leaves",
+          "generated": "betterfoliage_regions_unexplored:block/baobab_leaves",
+          "texture": "regions_unexplored:block/baobab_leaves"
+        },
+        {
+          "source": "regions_unexplored:block/blackwood_leaves",
+          "generated": "betterfoliage_regions_unexplored:block/blackwood_leaves",
+          "texture": "regions_unexplored:block/blackwood_leaves"
+        },
+        {
+          "source": "regions_unexplored:block/blue_magnolia_leaves",
+          "generated": "betterfoliage_regions_unexplored:block/blue_magnolia_leaves",
+          "texture": "regions_unexplored:block/blue_magnolia_leaves"
+        },
+        {
+          "source": "regions_unexplored:block/brimwood_leaves",
+          "generated": "betterfoliage_regions_unexplored:block/brimwood_leaves",
+          "texture": "regions_unexplored:block/brimwood_leaves"
+        },
+        {
+          "source": "regions_unexplored:block/cypress_leaves",
+          "generated": "betterfoliage_regions_unexplored:block/cypress_leaves",
+          "texture": "regions_unexplored:block/cypress_leaves"
+        },
+        {
+          "source": "regions_unexplored:block/dead_leaves",
+          "generated": "betterfoliage_regions_unexplored:block/dead_leaves",
+          "texture": "regions_unexplored:block/dead_leaves"
+        },
+        {
+          "source": "regions_unexplored:block/dead_pine_leaves",
+          "generated": "betterfoliage_regions_unexplored:block/dead_pine_leaves",
+          "texture": "regions_unexplored:block/dead_pine_leaves"
+        },
+        {
+          "source": "regions_unexplored:block/enchanted_birch_leaves",
+          "generated": "betterfoliage_regions_unexplored:block/enchanted_birch_leaves",
+          "texture": "regions_unexplored:block/enchanted_birch_leaves"
+        },
+        {
+          "source": "regions_unexplored:block/eucalyptus_leaves",
+          "generated": "betterfoliage_regions_unexplored:block/eucalyptus_leaves",
+          "texture": "regions_unexplored:block/eucalyptus_leaves"
+        },
+        {
+          "source": "regions_unexplored:block/golden_larch_leaves",
+          "generated": "betterfoliage_regions_unexplored:block/golden_larch_leaves",
+          "texture": "regions_unexplored:block/golden_larch_leaves"
+        },
+        {
+          "source": "regions_unexplored:block/kapok_leaves",
+          "generated": "betterfoliage_regions_unexplored:block/kapok_leaves",
+          "texture": "regions_unexplored:block/kapok_leaves"
+        },
+        {
+          "source": "regions_unexplored:block/larch_leaves",
+          "generated": "betterfoliage_regions_unexplored:block/larch_leaves",
+          "texture": "regions_unexplored:block/larch_leaves"
+        },
+        {
+          "source": "regions_unexplored:block/lavender_wisteria_leaves",
+          "generated": "betterfoliage_regions_unexplored:block/lavender_wisteria_leaves",
+          "texture": "regions_unexplored:block/wisteria_leaves"
+        },
+        {
+          "source": "regions_unexplored:block/magnolia_leaves",
+          "generated": "betterfoliage_regions_unexplored:block/magnolia_leaves",
+          "texture": "regions_unexplored:block/magnolia_leaves"
+        },
+        {
+          "source": "regions_unexplored:block/maple_leaves",
+          "generated": "betterfoliage_regions_unexplored:block/maple_leaves",
+          "texture": "regions_unexplored:block/maple_leaves"
+        },
+        {
+          "source": "regions_unexplored:block/orange_maple_leaves",
+          "generated": "betterfoliage_regions_unexplored:block/orange_maple_leaves",
+          "texture": "regions_unexplored:block/orange_maple_leaves"
+        },
+        {
+          "source": "regions_unexplored:block/pine_leaves",
+          "generated": "betterfoliage_regions_unexplored:block/pine_leaves",
+          "texture": "regions_unexplored:block/pine_leaves"
+        },
+        {
+          "source": "regions_unexplored:block/pink_magnolia_leaves",
+          "generated": "betterfoliage_regions_unexplored:block/pink_magnolia_leaves",
+          "texture": "regions_unexplored:block/pink_magnolia_leaves"
+        },
+        {
+          "source": "regions_unexplored:block/red_maple_leaves",
+          "generated": "betterfoliage_regions_unexplored:block/red_maple_leaves",
+          "texture": "regions_unexplored:block/red_maple_leaves"
+        },
+        {
+          "source": "regions_unexplored:block/redwood_leaves",
+          "generated": "betterfoliage_regions_unexplored:block/redwood_leaves",
+          "texture": "regions_unexplored:block/redwood_leaves"
+        },
+        {
+          "source": "regions_unexplored:block/salmon_wisteria_leaves",
+          "generated": "betterfoliage_regions_unexplored:block/salmon_wisteria_leaves",
+          "texture": "regions_unexplored:block/wisteria_leaves"
+        },
+        {
+          "source": "regions_unexplored:block/silver_birch_leaves",
+          "generated": "betterfoliage_regions_unexplored:block/silver_birch_leaves",
+          "texture": "regions_unexplored:block/silver_birch_leaves"
+        },
+        {
+          "source": "regions_unexplored:block/sky_wisteria_leaves",
+          "generated": "betterfoliage_regions_unexplored:block/sky_wisteria_leaves",
+          "texture": "regions_unexplored:block/wisteria_leaves"
+        },
+        {
+          "source": "regions_unexplored:block/socotra_leaves",
+          "generated": "betterfoliage_regions_unexplored:block/socotra_leaves",
+          "texture": "regions_unexplored:block/socotra_leaves"
+        },
+        {
+          "source": "regions_unexplored:block/white_magnolia_leaves",
+          "generated": "betterfoliage_regions_unexplored:block/white_magnolia_leaves",
+          "texture": "regions_unexplored:block/white_magnolia_leaves"
+        },
+        {
+          "source": "regions_unexplored:block/willow_leaves",
+          "generated": "betterfoliage_regions_unexplored:block/willow_leaves",
+          "texture": "regions_unexplored:block/willow_leaves"
+        },
+        {
+          "source": "regions_unexplored:block/wisteria_leaves",
+          "generated": "betterfoliage_regions_unexplored:block/wisteria_leaves",
+          "texture": "regions_unexplored:block/wisteria_leaves"
+        }
+      ]
+    }
+  },
+  "warnings": [],
+  "unresolved_textures": [],
+  "inferred_mappings": [],
+  "ambiguous_models": []
+}
