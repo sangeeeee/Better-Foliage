@@ -1,6 +1,0 @@
-{
-  "loader": "betterfoliage:leaves",
-  "leaves": "regions_unexplored:block/dead_pine_leaves",
-  "fluff": "betterfoliage_regions_unexplored:block/dead_pine_fluff",
-  "tintLeaves": false
-}

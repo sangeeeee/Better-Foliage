@@ -1,6 +1,0 @@
-{
-  "loader": "betterfoliage:leaves",
-  "leaves": "regions_unexplored:block/magnolia_leaves",
-  "fluff": "betterfoliage_regions_unexplored:block/magnolia_fluff",
-  "tintLeaves": true
-}

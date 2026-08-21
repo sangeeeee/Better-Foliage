@@ -1,0 +1,6 @@
+{
+  "loader": "betterfoliage:leaves",
+  "leaves": "biomeswevegone:block/mahogany/leaves",
+  "fluff": "betterfoliage_bwg:block/mahogany/fluff",
+  "tintLeaves": true
+}

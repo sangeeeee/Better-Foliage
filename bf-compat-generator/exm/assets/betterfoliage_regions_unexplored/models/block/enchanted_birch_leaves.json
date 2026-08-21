@@ -1,6 +1,0 @@
-{
-  "loader": "betterfoliage:leaves",
-  "leaves": "regions_unexplored:block/enchanted_birch_leaves",
-  "fluff": "betterfoliage_regions_unexplored:block/enchanted_birch_fluff",
-  "tintLeaves": false
-}

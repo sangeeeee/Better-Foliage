@@ -1,0 +1,6 @@
+{
+  "loader": "betterfoliage:leaves",
+  "leaves": "biomeswevegone:block/blooming_witch_hazel_leaves",
+  "fluff": "betterfoliage_bwg:block/witch_hazel/fluff",
+  "tintLeaves": false
+}

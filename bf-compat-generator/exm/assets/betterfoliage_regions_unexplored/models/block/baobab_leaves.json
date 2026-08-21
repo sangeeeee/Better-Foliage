@@ -1,6 +1,0 @@
-{
-  "loader": "betterfoliage:leaves",
-  "leaves": "regions_unexplored:block/baobab_leaves",
-  "fluff": "betterfoliage_regions_unexplored:block/baobab_fluff",
-  "tintLeaves": true
-}

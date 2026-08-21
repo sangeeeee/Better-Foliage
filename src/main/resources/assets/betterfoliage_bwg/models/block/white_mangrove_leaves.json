@@ -1,0 +1,6 @@
+{
+  "loader": "betterfoliage:leaves",
+  "leaves": "biomeswevegone:block/white_mangrove/leaves",
+  "fluff": "betterfoliage_bwg:block/white_mangrove/fluff",
+  "tintLeaves": false
+}

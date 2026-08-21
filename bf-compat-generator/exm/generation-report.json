@@ -1,12 +1,12 @@
 {
-  "input": "D:\\Workspace\\Java\\MC Mods\\Better-Foliage\\bf-compat-generator\\regions-unexplored.jar",
+  "input": "D:\\Workspace\\Java\\MC Mods\\Better-Foliage\\bf-compat-generator\\Oh-The-Biomes-Weve-Gone-NeoForge-2.6.0.jar",
   "generated_namespaces": {
-    "regions_unexplored": {
-      "generated_namespace": "betterfoliage_regions_unexplored",
+    "biomeswevegone": {
+      "generated_namespace": "betterfoliage_biomeswevegone",
       "textures": [
         {
-          "source": "regions_unexplored:block/alpha_oak_leaves",
-          "fluff": "betterfoliage_regions_unexplored:block/alpha_oak_fluff",
+          "source": "biomeswevegone:block/araucaria_leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/araucaria_fluff",
           "size": [
             32,
             32
@@ -15,8 +15,8 @@
           "animated": false
         },
         {
-          "source": "regions_unexplored:block/ashen_leaves",
-          "fluff": "betterfoliage_regions_unexplored:block/ashen_fluff",
+          "source": "biomeswevegone:block/aspen/leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/aspen/fluff",
           "size": [
             32,
             32
@@ -25,8 +25,8 @@
           "animated": false
         },
         {
-          "source": "regions_unexplored:block/bamboo_leaves",
-          "fluff": "betterfoliage_regions_unexplored:block/bamboo_fluff",
+          "source": "biomeswevegone:block/baobab/leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/baobab/fluff",
           "size": [
             32,
             32
@@ -35,8 +35,18 @@
           "animated": false
         },
         {
-          "source": "regions_unexplored:block/bamboo_log_leaves",
-          "fluff": "betterfoliage_regions_unexplored:block/bamboo_log_fluff",
+          "source": "biomeswevegone:block/blooming_witch_hazel_leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/blooming_witch_hazel_fluff",
+          "size": [
+            32,
+            96
+          ],
+          "tintLeaves": false,
+          "animated": true
+        },
+        {
+          "source": "biomeswevegone:block/blue_enchanted/leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/blue_enchanted/fluff",
           "size": [
             32,
             32
@@ -45,8 +55,268 @@
           "animated": false
         },
         {
-          "source": "regions_unexplored:block/baobab_leaves",
-          "fluff": "betterfoliage_regions_unexplored:block/baobab_fluff",
+          "source": "biomeswevegone:block/blue_spruce_leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/blue_spruce_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/brown_birch_leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/brown_birch_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/brown_oak_leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/brown_oak_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/brown_zelkova_leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/brown_zelkova_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/cika/leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/cika/fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/cypress/leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/cypress/fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/ebony/leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/ebony/fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/fir/leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/fir/fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/firecracker_leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/firecracker_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/flowering_baobab_leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/flowering_baobab_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/flowering_indigo_jacaranda_leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/flowering_indigo_jacaranda_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/flowering_ironwood_leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/flowering_ironwood_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/flowering_jacaranda_leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/flowering_jacaranda_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/flowering_orchard_leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/flowering_orchard_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/flowering_palo_verde_leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/flowering_palo_verde_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/flowering_skyris_leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/flowering_skyris_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/flowering_spirit_leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/flowering_spirit_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/flowering_yucca_leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/flowering_yucca_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/green_apple_skyris_leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/green_apple_skyris_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/green_enchanted/leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/green_enchanted/fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/holly/berry_leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/holly/berry_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/holly/leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/holly/fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/holly_berry_leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/holly_berry_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/indigo_jacaranda_leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/indigo_jacaranda_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/ironwood/leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/ironwood/fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/jacaranda/leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/jacaranda/fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/mahogany/leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/mahogany/fluff",
           "size": [
             32,
             32
@@ -55,38 +325,8 @@
           "animated": false
         },
         {
-          "source": "regions_unexplored:block/blackwood_leaves",
-          "fluff": "betterfoliage_regions_unexplored:block/blackwood_fluff",
-          "size": [
-            32,
-            32
-          ],
-          "tintLeaves": false,
-          "animated": false
-        },
-        {
-          "source": "regions_unexplored:block/blue_magnolia_leaves",
-          "fluff": "betterfoliage_regions_unexplored:block/blue_magnolia_fluff",
-          "size": [
-            32,
-            32
-          ],
-          "tintLeaves": false,
-          "animated": false
-        },
-        {
-          "source": "regions_unexplored:block/brimwood_leaves",
-          "fluff": "betterfoliage_regions_unexplored:block/brimwood_fluff",
-          "size": [
-            32,
-            32
-          ],
-          "tintLeaves": false,
-          "animated": false
-        },
-        {
-          "source": "regions_unexplored:block/cypress_leaves",
-          "fluff": "betterfoliage_regions_unexplored:block/cypress_fluff",
+          "source": "biomeswevegone:block/maple/leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/maple/fluff",
           "size": [
             32,
             32
@@ -95,8 +335,8 @@
           "animated": false
         },
         {
-          "source": "regions_unexplored:block/dead_leaves",
-          "fluff": "betterfoliage_regions_unexplored:block/dead_fluff",
+          "source": "biomeswevegone:block/orange_birch_leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/orange_birch_fluff",
           "size": [
             32,
             32
@@ -105,8 +345,8 @@
           "animated": false
         },
         {
-          "source": "regions_unexplored:block/dead_pine_leaves",
-          "fluff": "betterfoliage_regions_unexplored:block/dead_pine_fluff",
+          "source": "biomeswevegone:block/orange_oak_leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/orange_oak_fluff",
           "size": [
             32,
             32
@@ -115,8 +355,8 @@
           "animated": false
         },
         {
-          "source": "regions_unexplored:block/enchanted_birch_leaves",
-          "fluff": "betterfoliage_regions_unexplored:block/enchanted_birch_fluff",
+          "source": "biomeswevegone:block/orange_spruce_leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/orange_spruce_fluff",
           "size": [
             32,
             32
@@ -125,8 +365,248 @@
           "animated": false
         },
         {
-          "source": "regions_unexplored:block/eucalyptus_leaves",
-          "fluff": "betterfoliage_regions_unexplored:block/eucalyptus_fluff",
+          "source": "biomeswevegone:block/orchard_leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/orchard_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/palm/leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/palm/fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/palo_verde/leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/palo_verde/fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/pine/leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/pine/fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/rainbow_eucalyptus/leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/rainbow_eucalyptus/fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/red_birch_leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/red_birch_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/red_maple_leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/red_maple_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/red_oak_leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/red_oak_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/red_spruce_leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/red_spruce_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/redwood/leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/redwood/fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/ripe_baobab_leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/ripe_baobab_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/ripe_orchard_leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/ripe_orchard_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/ripe_yucca_leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/ripe_yucca_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/silver_maple_leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/silver_maple_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/skyris/leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/skyris/fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/spirit/leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/spirit/fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/spirit_leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/spirit_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/white_mangrove/leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/white_mangrove/fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/white_sakura_leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/white_sakura_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/willow/leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/willow/fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/witch_hazel/leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/witch_hazel/fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/yellow_birch_leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/yellow_birch_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/yellow_sakura_leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/yellow_sakura_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/yellow_spruce_leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/yellow_spruce_fluff",
+          "size": [
+            32,
+            32
+          ],
+          "tintLeaves": false,
+          "animated": false
+        },
+        {
+          "source": "biomeswevegone:block/yucca_leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/yucca_fluff",
           "size": [
             32,
             32
@@ -135,148 +615,8 @@
           "animated": false
         },
         {
-          "source": "regions_unexplored:block/golden_larch_leaves",
-          "fluff": "betterfoliage_regions_unexplored:block/golden_larch_fluff",
-          "size": [
-            32,
-            32
-          ],
-          "tintLeaves": false,
-          "animated": false
-        },
-        {
-          "source": "regions_unexplored:block/kapok_leaves",
-          "fluff": "betterfoliage_regions_unexplored:block/kapok_fluff",
-          "size": [
-            32,
-            32
-          ],
-          "tintLeaves": true,
-          "animated": false
-        },
-        {
-          "source": "regions_unexplored:block/larch_leaves",
-          "fluff": "betterfoliage_regions_unexplored:block/larch_fluff",
-          "size": [
-            32,
-            32
-          ],
-          "tintLeaves": false,
-          "animated": false
-        },
-        {
-          "source": "regions_unexplored:block/magnolia_leaves",
-          "fluff": "betterfoliage_regions_unexplored:block/magnolia_fluff",
-          "size": [
-            32,
-            32
-          ],
-          "tintLeaves": true,
-          "animated": false
-        },
-        {
-          "source": "regions_unexplored:block/maple_leaves",
-          "fluff": "betterfoliage_regions_unexplored:block/maple_fluff",
-          "size": [
-            32,
-            32
-          ],
-          "tintLeaves": true,
-          "animated": false
-        },
-        {
-          "source": "regions_unexplored:block/orange_maple_leaves",
-          "fluff": "betterfoliage_regions_unexplored:block/orange_maple_fluff",
-          "size": [
-            32,
-            32
-          ],
-          "tintLeaves": false,
-          "animated": false
-        },
-        {
-          "source": "regions_unexplored:block/pine_leaves",
-          "fluff": "betterfoliage_regions_unexplored:block/pine_fluff",
-          "size": [
-            32,
-            32
-          ],
-          "tintLeaves": true,
-          "animated": false
-        },
-        {
-          "source": "regions_unexplored:block/pink_magnolia_leaves",
-          "fluff": "betterfoliage_regions_unexplored:block/pink_magnolia_fluff",
-          "size": [
-            32,
-            32
-          ],
-          "tintLeaves": false,
-          "animated": false
-        },
-        {
-          "source": "regions_unexplored:block/red_maple_leaves",
-          "fluff": "betterfoliage_regions_unexplored:block/red_maple_fluff",
-          "size": [
-            32,
-            32
-          ],
-          "tintLeaves": false,
-          "animated": false
-        },
-        {
-          "source": "regions_unexplored:block/redwood_leaves",
-          "fluff": "betterfoliage_regions_unexplored:block/redwood_fluff",
-          "size": [
-            32,
-            32
-          ],
-          "tintLeaves": true,
-          "animated": false
-        },
-        {
-          "source": "regions_unexplored:block/silver_birch_leaves",
-          "fluff": "betterfoliage_regions_unexplored:block/silver_birch_fluff",
-          "size": [
-            32,
-            32
-          ],
-          "tintLeaves": false,
-          "animated": false
-        },
-        {
-          "source": "regions_unexplored:block/socotra_leaves",
-          "fluff": "betterfoliage_regions_unexplored:block/socotra_fluff",
-          "size": [
-            32,
-            32
-          ],
-          "tintLeaves": true,
-          "animated": false
-        },
-        {
-          "source": "regions_unexplored:block/white_magnolia_leaves",
-          "fluff": "betterfoliage_regions_unexplored:block/white_magnolia_fluff",
-          "size": [
-            32,
-            32
-          ],
-          "tintLeaves": false,
-          "animated": false
-        },
-        {
-          "source": "regions_unexplored:block/willow_leaves",
-          "fluff": "betterfoliage_regions_unexplored:block/willow_fluff",
-          "size": [
-            32,
-            32
-          ],
-          "tintLeaves": true,
-          "animated": false
-        },
-        {
-          "source": "regions_unexplored:block/wisteria_leaves",
-          "fluff": "betterfoliage_regions_unexplored:block/wisteria_fluff",
+          "source": "biomeswevegone:block/zelkova/leaves",
+          "fluff": "betterfoliage_biomeswevegone:block/zelkova/fluff",
           "size": [
             32,
             32
@@ -286,200 +626,376 @@
         }
       ],
       "blockstates": [
-        "regions_unexplored:alpha_leaves",
-        "regions_unexplored:ashen_leaves",
-        "regions_unexplored:bamboo_leaves",
-        "regions_unexplored:bamboo_log",
-        "regions_unexplored:bamboo_log_leaves",
-        "regions_unexplored:baobab_leaves",
-        "regions_unexplored:blackwood_leaves",
-        "regions_unexplored:blue_magnolia_leaves",
-        "regions_unexplored:brimwood_leaves",
-        "regions_unexplored:cypress_leaves",
-        "regions_unexplored:dead_leaves",
-        "regions_unexplored:dead_pine_leaves",
-        "regions_unexplored:enchanted_birch_leaves",
-        "regions_unexplored:eucalyptus_leaves",
-        "regions_unexplored:golden_larch_leaves",
-        "regions_unexplored:kapok_leaves",
-        "regions_unexplored:larch_leaves",
-        "regions_unexplored:lavender_wisteria_leaves",
-        "regions_unexplored:magnolia_leaves",
-        "regions_unexplored:maple_leaves",
-        "regions_unexplored:orange_maple_leaves",
-        "regions_unexplored:pine_leaves",
-        "regions_unexplored:pink_magnolia_leaves",
-        "regions_unexplored:red_maple_leaves",
-        "regions_unexplored:redwood_leaves",
-        "regions_unexplored:salmon_wisteria_leaves",
-        "regions_unexplored:silver_birch_leaves",
-        "regions_unexplored:sky_wisteria_leaves",
-        "regions_unexplored:socotra_leaves",
-        "regions_unexplored:white_magnolia_leaves",
-        "regions_unexplored:willow_leaves",
-        "regions_unexplored:wisteria_leaves"
+        "biomeswevegone:araucaria_leaves",
+        "biomeswevegone:aspen_leaves",
+        "biomeswevegone:baobab_leaves",
+        "biomeswevegone:blooming_witch_hazel_leaves",
+        "biomeswevegone:blue_enchanted_leaves",
+        "biomeswevegone:blue_spruce_leaves",
+        "biomeswevegone:brown_birch_leaves",
+        "biomeswevegone:brown_oak_leaves",
+        "biomeswevegone:brown_zelkova_leaves",
+        "biomeswevegone:cika_leaves",
+        "biomeswevegone:cypress_leaves",
+        "biomeswevegone:ebony_leaves",
+        "biomeswevegone:fir_leaves",
+        "biomeswevegone:firecracker_leaves",
+        "biomeswevegone:flowering_baobab_leaves",
+        "biomeswevegone:flowering_indigo_jacaranda_leaves",
+        "biomeswevegone:flowering_ironwood_leaves",
+        "biomeswevegone:flowering_jacaranda_leaves",
+        "biomeswevegone:flowering_orchard_leaves",
+        "biomeswevegone:flowering_palo_verde_leaves",
+        "biomeswevegone:flowering_skyris_leaves",
+        "biomeswevegone:flowering_spirit_leaves",
+        "biomeswevegone:flowering_yucca_leaves",
+        "biomeswevegone:green_apple_skyris_leaves",
+        "biomeswevegone:green_enchanted_leaves",
+        "biomeswevegone:holly_berry_leaves",
+        "biomeswevegone:holly_leaves",
+        "biomeswevegone:indigo_jacaranda_leaves",
+        "biomeswevegone:ironwood_leaves",
+        "biomeswevegone:jacaranda_leaves",
+        "biomeswevegone:mahogany_leaves",
+        "biomeswevegone:maple_leaves",
+        "biomeswevegone:orange_birch_leaves",
+        "biomeswevegone:orange_oak_leaves",
+        "biomeswevegone:orange_spruce_leaves",
+        "biomeswevegone:orchard_leaves",
+        "biomeswevegone:palm_leaves",
+        "biomeswevegone:palo_verde_leaves",
+        "biomeswevegone:pine_leaves",
+        "biomeswevegone:rainbow_eucalyptus_leaves",
+        "biomeswevegone:red_birch_leaves",
+        "biomeswevegone:red_maple_leaves",
+        "biomeswevegone:red_oak_leaves",
+        "biomeswevegone:red_spruce_leaves",
+        "biomeswevegone:redwood_leaves",
+        "biomeswevegone:ripe_baobab_leaves",
+        "biomeswevegone:ripe_orchard_leaves",
+        "biomeswevegone:ripe_yucca_leaves",
+        "biomeswevegone:silver_maple_leaves",
+        "biomeswevegone:skyris_leaves",
+        "biomeswevegone:spirit_leaves",
+        "biomeswevegone:white_mangrove_leaves",
+        "biomeswevegone:white_sakura_leaves",
+        "biomeswevegone:willow_leaves",
+        "biomeswevegone:witch_hazel_leaves",
+        "biomeswevegone:yellow_birch_leaves",
+        "biomeswevegone:yellow_sakura_leaves",
+        "biomeswevegone:yellow_spruce_leaves",
+        "biomeswevegone:yucca_leaves",
+        "biomeswevegone:zelkova_leaves"
       ],
       "models": [
         {
-          "source": "regions_unexplored:block/alpha_leaves",
-          "generated": "betterfoliage_regions_unexplored:block/alpha_leaves",
-          "texture": "regions_unexplored:block/alpha_oak_leaves"
+          "source": "biomeswevegone:block/araucaria_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/araucaria_leaves",
+          "texture": "biomeswevegone:block/araucaria_leaves"
         },
         {
-          "source": "regions_unexplored:block/ashen_leaves",
-          "generated": "betterfoliage_regions_unexplored:block/ashen_leaves",
-          "texture": "regions_unexplored:block/ashen_leaves"
+          "source": "biomeswevegone:block/aspen_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/aspen_leaves",
+          "texture": "biomeswevegone:block/aspen/leaves"
         },
         {
-          "source": "regions_unexplored:block/bamboo_leaves",
-          "generated": "betterfoliage_regions_unexplored:block/bamboo_leaves",
-          "texture": "regions_unexplored:block/bamboo_leaves"
+          "source": "biomeswevegone:block/baobab_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/baobab_leaves",
+          "texture": "biomeswevegone:block/baobab/leaves"
         },
         {
-          "source": "regions_unexplored:block/bamboo_log_leaves",
-          "generated": "betterfoliage_regions_unexplored:block/bamboo_log_leaves",
-          "texture": "regions_unexplored:block/bamboo_log_leaves"
+          "source": "biomeswevegone:block/blooming_witch_hazel_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/blooming_witch_hazel_leaves",
+          "texture": "biomeswevegone:block/blooming_witch_hazel_leaves"
         },
         {
-          "source": "regions_unexplored:block/baobab_leaves",
-          "generated": "betterfoliage_regions_unexplored:block/baobab_leaves",
-          "texture": "regions_unexplored:block/baobab_leaves"
+          "source": "biomeswevegone:block/blue_enchanted_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/blue_enchanted_leaves",
+          "texture": "biomeswevegone:block/blue_enchanted/leaves"
         },
         {
-          "source": "regions_unexplored:block/blackwood_leaves",
-          "generated": "betterfoliage_regions_unexplored:block/blackwood_leaves",
-          "texture": "regions_unexplored:block/blackwood_leaves"
+          "source": "biomeswevegone:block/blue_spruce_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/blue_spruce_leaves",
+          "texture": "biomeswevegone:block/blue_spruce_leaves"
         },
         {
-          "source": "regions_unexplored:block/blue_magnolia_leaves",
-          "generated": "betterfoliage_regions_unexplored:block/blue_magnolia_leaves",
-          "texture": "regions_unexplored:block/blue_magnolia_leaves"
+          "source": "biomeswevegone:block/brown_birch_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/brown_birch_leaves",
+          "texture": "biomeswevegone:block/brown_birch_leaves"
         },
         {
-          "source": "regions_unexplored:block/brimwood_leaves",
-          "generated": "betterfoliage_regions_unexplored:block/brimwood_leaves",
-          "texture": "regions_unexplored:block/brimwood_leaves"
+          "source": "biomeswevegone:block/brown_oak_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/brown_oak_leaves",
+          "texture": "biomeswevegone:block/brown_oak_leaves"
         },
         {
-          "source": "regions_unexplored:block/cypress_leaves",
-          "generated": "betterfoliage_regions_unexplored:block/cypress_leaves",
-          "texture": "regions_unexplored:block/cypress_leaves"
+          "source": "biomeswevegone:block/brown_zelkova_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/brown_zelkova_leaves",
+          "texture": "biomeswevegone:block/brown_zelkova_leaves"
         },
         {
-          "source": "regions_unexplored:block/dead_leaves",
-          "generated": "betterfoliage_regions_unexplored:block/dead_leaves",
-          "texture": "regions_unexplored:block/dead_leaves"
+          "source": "biomeswevegone:block/cika_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/cika_leaves",
+          "texture": "biomeswevegone:block/cika/leaves"
         },
         {
-          "source": "regions_unexplored:block/dead_pine_leaves",
-          "generated": "betterfoliage_regions_unexplored:block/dead_pine_leaves",
-          "texture": "regions_unexplored:block/dead_pine_leaves"
+          "source": "biomeswevegone:block/cypress_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/cypress_leaves",
+          "texture": "biomeswevegone:block/cypress/leaves"
         },
         {
-          "source": "regions_unexplored:block/enchanted_birch_leaves",
-          "generated": "betterfoliage_regions_unexplored:block/enchanted_birch_leaves",
-          "texture": "regions_unexplored:block/enchanted_birch_leaves"
+          "source": "biomeswevegone:block/ebony_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/ebony_leaves",
+          "texture": "biomeswevegone:block/ebony/leaves"
         },
         {
-          "source": "regions_unexplored:block/eucalyptus_leaves",
-          "generated": "betterfoliage_regions_unexplored:block/eucalyptus_leaves",
-          "texture": "regions_unexplored:block/eucalyptus_leaves"
+          "source": "biomeswevegone:block/fir_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/fir_leaves",
+          "texture": "biomeswevegone:block/fir/leaves"
         },
         {
-          "source": "regions_unexplored:block/golden_larch_leaves",
-          "generated": "betterfoliage_regions_unexplored:block/golden_larch_leaves",
-          "texture": "regions_unexplored:block/golden_larch_leaves"
+          "source": "biomeswevegone:block/firecracker_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/firecracker_leaves",
+          "texture": "biomeswevegone:block/firecracker_leaves"
         },
         {
-          "source": "regions_unexplored:block/kapok_leaves",
-          "generated": "betterfoliage_regions_unexplored:block/kapok_leaves",
-          "texture": "regions_unexplored:block/kapok_leaves"
+          "source": "biomeswevegone:block/flowering_baobab_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/flowering_baobab_leaves",
+          "texture": "biomeswevegone:block/flowering_baobab_leaves"
         },
         {
-          "source": "regions_unexplored:block/larch_leaves",
-          "generated": "betterfoliage_regions_unexplored:block/larch_leaves",
-          "texture": "regions_unexplored:block/larch_leaves"
+          "source": "biomeswevegone:block/flowering_indigo_jacaranda_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/flowering_indigo_jacaranda_leaves",
+          "texture": "biomeswevegone:block/flowering_indigo_jacaranda_leaves"
         },
         {
-          "source": "regions_unexplored:block/lavender_wisteria_leaves",
-          "generated": "betterfoliage_regions_unexplored:block/lavender_wisteria_leaves",
-          "texture": "regions_unexplored:block/wisteria_leaves"
+          "source": "biomeswevegone:block/flowering_ironwood_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/flowering_ironwood_leaves",
+          "texture": "biomeswevegone:block/flowering_ironwood_leaves"
         },
         {
-          "source": "regions_unexplored:block/magnolia_leaves",
-          "generated": "betterfoliage_regions_unexplored:block/magnolia_leaves",
-          "texture": "regions_unexplored:block/magnolia_leaves"
+          "source": "biomeswevegone:block/flowering_jacaranda_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/flowering_jacaranda_leaves",
+          "texture": "biomeswevegone:block/flowering_jacaranda_leaves"
         },
         {
-          "source": "regions_unexplored:block/maple_leaves",
-          "generated": "betterfoliage_regions_unexplored:block/maple_leaves",
-          "texture": "regions_unexplored:block/maple_leaves"
+          "source": "biomeswevegone:block/flowering_orchard_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/flowering_orchard_leaves",
+          "texture": "biomeswevegone:block/flowering_orchard_leaves"
         },
         {
-          "source": "regions_unexplored:block/orange_maple_leaves",
-          "generated": "betterfoliage_regions_unexplored:block/orange_maple_leaves",
-          "texture": "regions_unexplored:block/orange_maple_leaves"
+          "source": "biomeswevegone:block/flowering_palo_verde_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/flowering_palo_verde_leaves",
+          "texture": "biomeswevegone:block/flowering_palo_verde_leaves"
         },
         {
-          "source": "regions_unexplored:block/pine_leaves",
-          "generated": "betterfoliage_regions_unexplored:block/pine_leaves",
-          "texture": "regions_unexplored:block/pine_leaves"
+          "source": "biomeswevegone:block/flowering_skyris_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/flowering_skyris_leaves",
+          "texture": "biomeswevegone:block/flowering_skyris_leaves"
         },
         {
-          "source": "regions_unexplored:block/pink_magnolia_leaves",
-          "generated": "betterfoliage_regions_unexplored:block/pink_magnolia_leaves",
-          "texture": "regions_unexplored:block/pink_magnolia_leaves"
+          "source": "biomeswevegone:block/flowering_spirit_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/flowering_spirit_leaves",
+          "texture": "biomeswevegone:block/flowering_spirit_leaves"
         },
         {
-          "source": "regions_unexplored:block/red_maple_leaves",
-          "generated": "betterfoliage_regions_unexplored:block/red_maple_leaves",
-          "texture": "regions_unexplored:block/red_maple_leaves"
+          "source": "biomeswevegone:block/flowering_yucca_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/flowering_yucca_leaves",
+          "texture": "biomeswevegone:block/flowering_yucca_leaves"
         },
         {
-          "source": "regions_unexplored:block/redwood_leaves",
-          "generated": "betterfoliage_regions_unexplored:block/redwood_leaves",
-          "texture": "regions_unexplored:block/redwood_leaves"
+          "source": "biomeswevegone:block/green_apple_skyris_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/green_apple_skyris_leaves",
+          "texture": "biomeswevegone:block/green_apple_skyris_leaves"
         },
         {
-          "source": "regions_unexplored:block/salmon_wisteria_leaves",
-          "generated": "betterfoliage_regions_unexplored:block/salmon_wisteria_leaves",
-          "texture": "regions_unexplored:block/wisteria_leaves"
+          "source": "biomeswevegone:block/green_enchanted_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/green_enchanted_leaves",
+          "texture": "biomeswevegone:block/green_enchanted/leaves"
         },
         {
-          "source": "regions_unexplored:block/silver_birch_leaves",
-          "generated": "betterfoliage_regions_unexplored:block/silver_birch_leaves",
-          "texture": "regions_unexplored:block/silver_birch_leaves"
+          "source": "biomeswevegone:block/holly_berry_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/holly_berry_leaves",
+          "texture": "biomeswevegone:block/holly_berry_leaves"
         },
         {
-          "source": "regions_unexplored:block/sky_wisteria_leaves",
-          "generated": "betterfoliage_regions_unexplored:block/sky_wisteria_leaves",
-          "texture": "regions_unexplored:block/wisteria_leaves"
+          "source": "biomeswevegone:block/holly_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/holly_leaves",
+          "texture": "biomeswevegone:block/holly/leaves"
         },
         {
-          "source": "regions_unexplored:block/socotra_leaves",
-          "generated": "betterfoliage_regions_unexplored:block/socotra_leaves",
-          "texture": "regions_unexplored:block/socotra_leaves"
+          "source": "biomeswevegone:block/indigo_jacaranda_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/indigo_jacaranda_leaves",
+          "texture": "biomeswevegone:block/indigo_jacaranda_leaves"
         },
         {
-          "source": "regions_unexplored:block/white_magnolia_leaves",
-          "generated": "betterfoliage_regions_unexplored:block/white_magnolia_leaves",
-          "texture": "regions_unexplored:block/white_magnolia_leaves"
+          "source": "biomeswevegone:block/ironwood_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/ironwood_leaves",
+          "texture": "biomeswevegone:block/ironwood/leaves"
         },
         {
-          "source": "regions_unexplored:block/willow_leaves",
-          "generated": "betterfoliage_regions_unexplored:block/willow_leaves",
-          "texture": "regions_unexplored:block/willow_leaves"
+          "source": "biomeswevegone:block/jacaranda_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/jacaranda_leaves",
+          "texture": "biomeswevegone:block/jacaranda/leaves"
         },
         {
-          "source": "regions_unexplored:block/wisteria_leaves",
-          "generated": "betterfoliage_regions_unexplored:block/wisteria_leaves",
-          "texture": "regions_unexplored:block/wisteria_leaves"
+          "source": "biomeswevegone:block/mahogany_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/mahogany_leaves",
+          "texture": "biomeswevegone:block/mahogany/leaves"
+        },
+        {
+          "source": "biomeswevegone:block/maple_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/maple_leaves",
+          "texture": "biomeswevegone:block/maple/leaves"
+        },
+        {
+          "source": "biomeswevegone:block/orange_birch_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/orange_birch_leaves",
+          "texture": "biomeswevegone:block/orange_birch_leaves"
+        },
+        {
+          "source": "biomeswevegone:block/orange_oak_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/orange_oak_leaves",
+          "texture": "biomeswevegone:block/orange_oak_leaves"
+        },
+        {
+          "source": "biomeswevegone:block/orange_spruce_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/orange_spruce_leaves",
+          "texture": "biomeswevegone:block/orange_spruce_leaves"
+        },
+        {
+          "source": "biomeswevegone:block/orchard_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/orchard_leaves",
+          "texture": "biomeswevegone:block/orchard_leaves"
+        },
+        {
+          "source": "biomeswevegone:block/palm_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/palm_leaves",
+          "texture": "biomeswevegone:block/palm/leaves"
+        },
+        {
+          "source": "biomeswevegone:block/palo_verde_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/palo_verde_leaves",
+          "texture": "biomeswevegone:block/palo_verde/leaves"
+        },
+        {
+          "source": "biomeswevegone:block/pine_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/pine_leaves",
+          "texture": "biomeswevegone:block/pine/leaves"
+        },
+        {
+          "source": "biomeswevegone:block/rainbow_eucalyptus_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/rainbow_eucalyptus_leaves",
+          "texture": "biomeswevegone:block/rainbow_eucalyptus/leaves"
+        },
+        {
+          "source": "biomeswevegone:block/red_birch_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/red_birch_leaves",
+          "texture": "biomeswevegone:block/red_birch_leaves"
+        },
+        {
+          "source": "biomeswevegone:block/red_maple_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/red_maple_leaves",
+          "texture": "biomeswevegone:block/red_maple_leaves"
+        },
+        {
+          "source": "biomeswevegone:block/red_oak_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/red_oak_leaves",
+          "texture": "biomeswevegone:block/red_oak_leaves"
+        },
+        {
+          "source": "biomeswevegone:block/red_spruce_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/red_spruce_leaves",
+          "texture": "biomeswevegone:block/red_spruce_leaves"
+        },
+        {
+          "source": "biomeswevegone:block/redwood_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/redwood_leaves",
+          "texture": "biomeswevegone:block/redwood/leaves"
+        },
+        {
+          "source": "biomeswevegone:block/ripe_baobab_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/ripe_baobab_leaves",
+          "texture": "biomeswevegone:block/ripe_baobab_leaves"
+        },
+        {
+          "source": "biomeswevegone:block/ripe_orchard_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/ripe_orchard_leaves",
+          "texture": "biomeswevegone:block/ripe_orchard_leaves"
+        },
+        {
+          "source": "biomeswevegone:block/ripe_yucca_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/ripe_yucca_leaves",
+          "texture": "biomeswevegone:block/ripe_yucca_leaves"
+        },
+        {
+          "source": "biomeswevegone:block/silver_maple_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/silver_maple_leaves",
+          "texture": "biomeswevegone:block/silver_maple_leaves"
+        },
+        {
+          "source": "biomeswevegone:block/skyris_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/skyris_leaves",
+          "texture": "biomeswevegone:block/skyris/leaves"
+        },
+        {
+          "source": "biomeswevegone:block/spirit_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/spirit_leaves",
+          "texture": "biomeswevegone:block/spirit_leaves"
+        },
+        {
+          "source": "biomeswevegone:block/white_mangrove_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/white_mangrove_leaves",
+          "texture": "biomeswevegone:block/white_mangrove/leaves"
+        },
+        {
+          "source": "biomeswevegone:block/white_sakura_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/white_sakura_leaves",
+          "texture": "biomeswevegone:block/white_sakura_leaves"
+        },
+        {
+          "source": "biomeswevegone:block/willow_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/willow_leaves",
+          "texture": "biomeswevegone:block/willow/leaves"
+        },
+        {
+          "source": "biomeswevegone:block/witch_hazel_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/witch_hazel_leaves",
+          "texture": "biomeswevegone:block/witch_hazel/leaves"
+        },
+        {
+          "source": "biomeswevegone:block/yellow_birch_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/yellow_birch_leaves",
+          "texture": "biomeswevegone:block/yellow_birch_leaves"
+        },
+        {
+          "source": "biomeswevegone:block/yellow_sakura_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/yellow_sakura_leaves",
+          "texture": "biomeswevegone:block/yellow_sakura_leaves"
+        },
+        {
+          "source": "biomeswevegone:block/yellow_spruce_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/yellow_spruce_leaves",
+          "texture": "biomeswevegone:block/yellow_spruce_leaves"
+        },
+        {
+          "source": "biomeswevegone:block/yucca_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/yucca_leaves",
+          "texture": "biomeswevegone:block/yucca_leaves"
+        },
+        {
+          "source": "biomeswevegone:block/zelkova_leaves",
+          "generated": "betterfoliage_biomeswevegone:block/zelkova_leaves",
+          "texture": "biomeswevegone:block/zelkova/leaves"
         }
       ]
     }
   },
   "warnings": [],
-  "unresolved_textures": [],
+  "unresolved_textures": [
+    "biomeswevegone:block/holly/berry_leaves",
+    "biomeswevegone:block/spirit/leaves"
+  ],
   "inferred_mappings": [],
   "ambiguous_models": []
 }
