@@ -1,0 +1,6 @@
+{
+  "loader": "betterfoliage:leaves",
+  "leaves": "biomeswevegone:block/willow/leaves",
+  "fluff": "betterfoliage_biomeswevegone:block/willow/fluff",
+  "tintLeaves": false
+}

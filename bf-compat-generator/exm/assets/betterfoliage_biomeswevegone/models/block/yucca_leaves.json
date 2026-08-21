@@ -1,0 +1,6 @@
+{
+  "loader": "betterfoliage:leaves",
+  "leaves": "biomeswevegone:block/yucca_leaves",
+  "fluff": "betterfoliage_biomeswevegone:block/yucca_fluff",
+  "tintLeaves": true
+}

@@ -1,0 +1,6 @@
+{
+  "loader": "betterfoliage:leaves",
+  "leaves": "biomeswevegone:block/firecracker_leaves",
+  "fluff": "betterfoliage_biomeswevegone:block/firecracker_fluff",
+  "tintLeaves": false
+}

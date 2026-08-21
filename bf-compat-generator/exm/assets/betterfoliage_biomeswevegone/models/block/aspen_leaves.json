@@ -1,0 +1,6 @@
+{
+  "loader": "betterfoliage:leaves",
+  "leaves": "biomeswevegone:block/aspen/leaves",
+  "fluff": "betterfoliage_biomeswevegone:block/aspen/fluff",
+  "tintLeaves": false
+}
