@@ -30,7 +30,7 @@ import net.neoforged.neoforge.client.event.AddSectionGeometryEvent;
 /** Renders purely client-side petal quads on water below supported cherry leaves. */
 public final class WaterPetalRenderer
 {
-    private static final int SEARCH_DEPTH = 10;
+    private static final int SEARCH_DEPTH = 20;
     private static final int MIN_FALL_DISTANCE = 2;
     private static final float SURFACE_EPSILON = 0.002F;
     private static final float MAX_OFFSET = 0.03125F;
@@ -209,13 +209,20 @@ public final class WaterPetalRenderer
         final float u1 = sprite.getU(x1);
         final float v1 = sprite.getV(z1);
 
-        vertex(consumer, pose, patch, x0, z0, u0, v0);
-        vertex(consumer, pose, patch, x0, z1, u0, v1);
-        vertex(consumer, pose, patch, x1, z1, u1, v1);
-        vertex(consumer, pose, patch, x1, z0, u1, v0);
+        // Chunk cutout rendering culls back faces, so a single upward-facing quad disappears when viewed underwater.
+        // Emit both windings at the same height: only the face aimed at the camera survives culling, without an offset.
+        vertex(consumer, pose, patch, x0, z0, u0, v0, 1.0F);
+        vertex(consumer, pose, patch, x0, z1, u0, v1, 1.0F);
+        vertex(consumer, pose, patch, x1, z1, u1, v1, 1.0F);
+        vertex(consumer, pose, patch, x1, z0, u1, v0, 1.0F);
+
+        vertex(consumer, pose, patch, x1, z0, u1, v0, -1.0F);
+        vertex(consumer, pose, patch, x1, z1, u1, v1, -1.0F);
+        vertex(consumer, pose, patch, x0, z1, u0, v1, -1.0F);
+        vertex(consumer, pose, patch, x0, z0, u0, v0, -1.0F);
     }
 
-    private static void vertex(VertexConsumer consumer, PoseStack.Pose pose, PetalPatch patch, float x, float z, float u, float v)
+    private static void vertex(VertexConsumer consumer, PoseStack.Pose pose, PetalPatch patch, float x, float z, float u, float v, float normalY)
     {
         final float rotatedX;
         final float rotatedZ;
@@ -244,7 +251,7 @@ public final class WaterPetalRenderer
             .setUv(u, v)
             .setOverlay(OverlayTexture.NO_OVERLAY)
             .setLight(patch.light())
-            .setNormal(pose, 0.0F, 1.0F, 0.0F);
+            .setNormal(pose, 0.0F, normalY, 0.0F);
     }
 
     /** Marks a lower water section dirty when a leaf or an intervening obstruction changes across a section boundary. */

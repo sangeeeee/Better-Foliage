@@ -15,7 +15,7 @@ public record ReedData(boolean eligible, float populationRoll, int model, int li
 {
     public static final ModelProperty<ReedData> PROPERTY = new ModelProperty<>();
     private static final long RANDOM_SALT = 0x6A09E667F3BCC909L;
-    private static final int LIGHT_BRIGHTNESS_BOOST = 1;
+    private static final int LIGHT_BRIGHTNESS_BOOST = 2;
 
     public static ReedData create(BlockAndTintGetter level, BlockPos pos)
     {
@@ -23,7 +23,9 @@ public record ReedData(boolean eligible, float populationRoll, int model, int li
         BlockPos airPos = pos.above(2);
         BlockState waterState = level.getBlockState(waterPos);
         BlockState airState = level.getBlockState(airPos);
-        boolean eligible = waterState.is(Blocks.WATER) && airState.isAir();
+        boolean eligible = waterState.is(Blocks.WATER)
+            && waterState.getFluidState().isSource()
+            && airState.isAir();
         if (eligible)
         {
             var clientLevel = Minecraft.getInstance().level;
