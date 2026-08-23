@@ -18,6 +18,10 @@ LEAF_TEXTURE_RE = re.compile(
     r"^assets/(?P<namespace>[a-z0-9_.-]+)/textures/block/(?P<path>.*leaves)\.png$",
     re.IGNORECASE,
 )
+BLOCK_TEXTURE_RE = re.compile(
+    r"^assets/(?P<namespace>[a-z0-9_.-]+)/textures/block/(?P<path>.+)\.png$",
+    re.IGNORECASE,
+)
 MODEL_RE = re.compile(
     r"^assets/(?P<namespace>[a-z0-9_.-]+)/models/(?P<path>.+)\.json$",
     re.IGNORECASE,
@@ -65,8 +69,13 @@ class LeafTexture:
 
     @property
     def fluff_relative_path(self) -> str:
-        path = self.relative_path
-        return f"{path[:-len('leaves')]}fluff"
+        path = PurePosixPath(self.relative_path)
+        name = path.name
+        if name.endswith("leaves"):
+            fluff_name = f"{name[:-len('leaves')]}fluff"
+        else:
+            fluff_name = f"{name}_fluff"
+        return (path.parent / fluff_name).as_posix()
 
     @property
     def inferred_blockstate(self) -> str:
@@ -84,6 +93,7 @@ class GenerationOptions:
     scale: int = 2
     make_zip: bool = False
     force: bool = False
+    extra_textures: tuple[str, ...] = ()
 
 
 def generate_pack(jar_path: Path, output_dir: Path, options: GenerationOptions) -> dict[str, Any]:
@@ -110,7 +120,9 @@ def generate_pack(jar_path: Path, output_dir: Path, options: GenerationOptions) 
 
     with ZipFile(jar_path) as jar:
         entries = {info.filename.replace("\\", "/"): info for info in jar.infolist() if not info.is_dir()}
-        leaves = _find_leaf_textures(entries, options)
+        leaves, unmatched_extra_textures = _find_leaf_textures(entries, options)
+        report["requested_extra_textures"] = list(options.extra_textures)
+        report["requested_extra_textures_not_found"] = unmatched_extra_textures
         models, model_errors = _read_json_entries(jar, entries, MODEL_RE)
         blockstates, blockstate_errors = _read_json_entries(jar, entries, BLOCKSTATE_RE)
         report["warnings"].extend(model_errors)
@@ -229,11 +241,17 @@ def generate_pack(jar_path: Path, output_dir: Path, options: GenerationOptions) 
     return report
 
 
-def _find_leaf_textures(entries: dict[str, Any], options: GenerationOptions) -> dict[ResourceId, LeafTexture]:
+def _find_leaf_textures(
+    entries: dict[str, Any],
+    options: GenerationOptions,
+) -> tuple[dict[ResourceId, LeafTexture], list[str]]:
     result: dict[ResourceId, LeafTexture] = {}
     names_lower = {name.lower(): name for name in entries}
+    extra_specs = tuple(_normalize_texture_spec(value) for value in options.extra_textures)
+    matched_specs: set[int] = set()
     for entry_name in entries:
-        match = LEAF_TEXTURE_RE.match(entry_name.lower())
+        normalized_entry = entry_name.lower()
+        match = BLOCK_TEXTURE_RE.match(normalized_entry)
         if not match:
             continue
         namespace = match.group("namespace")
@@ -241,10 +259,49 @@ def _find_leaf_textures(entries: dict[str, Any], options: GenerationOptions) -> 
             continue
         if options.namespaces and namespace not in options.namespaces:
             continue
+        relative_png = f"{match.group('path')}.png"
+        matched_extra = {
+            index
+            for index, spec in enumerate(extra_specs)
+            if _texture_spec_matches(spec, namespace, relative_png)
+        }
+        if not LEAF_TEXTURE_RE.match(normalized_entry) and not matched_extra:
+            continue
+        matched_specs.update(matched_extra)
         texture = ResourceId(namespace, f"block/{match.group('path')}")
         metadata_entry = names_lower.get(f"{entry_name.lower()}.mcmeta")
         result[texture] = LeafTexture(texture, entry_name, metadata_entry)
-    return result
+    unmatched = [options.extra_textures[index] for index in range(len(extra_specs)) if index not in matched_specs]
+    return result, unmatched
+
+
+def _normalize_texture_spec(value: str) -> str:
+    spec = value.strip().replace("\\", "/").lower()
+    while spec.startswith("./"):
+        spec = spec[2:]
+    assets_match = re.fullmatch(
+        r"assets/([a-z0-9_.-]+)/textures/block/(.+)",
+        spec,
+    )
+    if assets_match:
+        spec = f"{assets_match.group(1)}:{assets_match.group(2)}"
+    elif ":" in spec:
+        namespace, path = spec.split(":", 1)
+        spec = f"{namespace}:{path.removeprefix('textures/block/').removeprefix('block/')}"
+    else:
+        spec = spec.removeprefix("textures/block/").removeprefix("block/")
+    if not spec.endswith(".png"):
+        spec += ".png"
+    return spec
+
+
+def _texture_spec_matches(spec: str, namespace: str, relative_png: str) -> bool:
+    if ":" in spec:
+        spec_namespace, spec_path = spec.split(":", 1)
+        return spec_namespace == namespace and spec_path == relative_png
+    if "/" in spec:
+        return spec == relative_png
+    return spec == PurePosixPath(relative_png).name
 
 
 def _read_json_entries(

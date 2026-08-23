@@ -30,11 +30,37 @@ python -m bf_compat_generator "D:\mods\example-mod.jar" --output "generated\Exam
 --pack-format 34          输出资源包格式，默认适用于 Minecraft 1.21/1.21.1
 --namespace MODID         只处理指定命名空间，可重复使用
 --include-minecraft       同时处理 assets/minecraft（默认跳过）
+--texture-list FILE       额外处理 TXT 中列出的非标准树叶贴图
 --zip                     另外生成同名 ZIP 资源包
 --force                   明确覆盖已有的非空输出目录或 ZIP
 --grayscale-tolerance 4   灰度检测允许的 RGB 通道误差
 --grayscale-ratio 0.98    至少多少比例的非透明像素满足灰度条件
 ```
+
+### 非标准树叶文件名
+
+如果某些树叶贴图不以 `leaves.png` 结尾，可以建立一个 UTF-8 TXT：
+
+```text
+# 纯文件名：匹配任意 block 子目录中的同名文件
+cold_domain_foliage.png
+
+# textures/block 下的相对路径，Windows 反斜杠也可以
+frost\cold_needles.png
+
+# 带命名空间的精确路径
+examplemod:block/special/canopy.png
+```
+
+然后运行：
+
+```powershell
+bf-compat-generator "D:\mods\example-mod.jar" `
+  --output "generated\Example BF Compat" `
+  --texture-list "extra-leaves.txt"
+```
+
+TXT 条目会与默认的 `*leaves.png` 扫描结果合并；不传该参数时行为与以前完全相同。空行和以 `#` 开头的注释会被忽略，未找到的条目记录在 `generation-report.json` 的 `requested_extra_textures_not_found` 中。非标准名称默认追加 `_fluff`，例如 `cold_needles.png` 生成 `cold_needles_fluff.png`。
 
 ## 输出结构
 
