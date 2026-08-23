@@ -1,0 +1,6 @@
+{
+  "loader": "betterfoliage:leaves",
+  "leaves": "cluttered:block/poplar_leaves",
+  "fluff": "betterfoliage_cluttered:block/poplar_fluff",
+  "tintLeaves": false
+}

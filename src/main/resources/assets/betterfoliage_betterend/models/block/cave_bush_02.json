@@ -1,0 +1,6 @@
+{
+  "loader": "betterfoliage:leaves",
+  "leaves": "betterend:block/cave_bush_leaves_2",
+  "fluff": "betterfoliage_betterend:block/cave_bush_leaves_2_fluff",
+  "tintLeaves": false
+}

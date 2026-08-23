@@ -1,0 +1,5 @@
+fruiting_avocado_leaves_0.png
+fruiting_avocado_leaves_1.png
+fruiting_avocado_leaves_2.png
+fruiting_avocado_leaves_3.png
+fruiting_avocado_leaves_4.png

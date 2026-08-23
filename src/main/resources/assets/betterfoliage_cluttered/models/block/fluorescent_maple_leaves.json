@@ -1,0 +1,6 @@
+{
+  "loader": "betterfoliage:leaves",
+  "leaves": "cluttered:block/fluorescent_maple_leaves",
+  "fluff": "betterfoliage_cluttered:block/fluorescent_maple_fluff",
+  "tintLeaves": false
+}

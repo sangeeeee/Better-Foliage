@@ -1,6 +1,0 @@
-{
-  "loader": "betterfoliage:leaves",
-  "leaves": "biomeswevegone:block/ripe_baobab_leaves",
-  "fluff": "betterfoliage_biomeswevegone:block/ripe_baobab_fluff",
-  "tintLeaves": false
-}

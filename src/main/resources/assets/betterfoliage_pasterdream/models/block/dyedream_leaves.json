@@ -1,0 +1,6 @@
+{
+  "loader": "betterfoliage:leaves",
+  "leaves": "pasterdream:block/dyedream_leaves",
+  "fluff": "betterfoliage_pasterdream:block/dyedream_fluff",
+  "tintLeaves": false
+}

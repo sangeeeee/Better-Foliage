@@ -1,0 +1,6 @@
+{
+  "loader": "betterfoliage:leaves",
+  "leaves": "pasterdream:block/windmoor_leaves_1",
+  "fluff": "betterfoliage_pasterdream:block/windmoor_leaves_1_fluff",
+  "tintLeaves": false
+}

@@ -1,6 +1,0 @@
-{
-  "loader": "betterfoliage:leaves",
-  "leaves": "biomeswevegone:block/holly_berry_leaves",
-  "fluff": "betterfoliage_biomeswevegone:block/holly_berry_fluff",
-  "tintLeaves": false
-}

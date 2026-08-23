@@ -1,6 +1,0 @@
-{
-  "loader": "betterfoliage:leaves",
-  "leaves": "biomeswevegone:block/ripe_orchard_leaves",
-  "fluff": "betterfoliage_biomeswevegone:block/ripe_orchard_fluff",
-  "tintLeaves": false
-}

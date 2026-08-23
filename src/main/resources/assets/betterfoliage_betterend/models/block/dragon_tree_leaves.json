@@ -1,0 +1,6 @@
+{
+  "loader": "betterfoliage:leaves",
+  "leaves": "betterend:block/dragon_tree_leaves",
+  "fluff": "betterfoliage_betterend:block/dragon_tree_fluff",
+  "tintLeaves": false
+}

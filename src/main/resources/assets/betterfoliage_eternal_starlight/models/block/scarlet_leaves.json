@@ -1,0 +1,6 @@
+{
+  "loader": "betterfoliage:leaves",
+  "leaves": "eternal_starlight:block/scarlet_leaves",
+  "fluff": "betterfoliage_eternal_starlight:block/scarlet_fluff",
+  "tintLeaves": false
+}

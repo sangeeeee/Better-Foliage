@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "snowy=false": {
+      "model": "betterfoliage_eternal_starlight:block/northland_leaves"
+    },
+    "snowy=true": {
+      "model": "betterfoliage_eternal_starlight:block/northland_leaves_snowy"
+    }
+  }
+}

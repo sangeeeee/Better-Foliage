@@ -1,6 +1,0 @@
-{
-  "loader": "betterfoliage:leaves",
-  "leaves": "biomeswevegone:block/orange_oak_leaves",
-  "fluff": "betterfoliage_biomeswevegone:block/orange_oak_fluff",
-  "tintLeaves": false
-}

@@ -1,0 +1,6 @@
+{
+  "loader": "betterfoliage:leaves",
+  "leaves": "cluttered:block/crabapple_leaves",
+  "fluff": "betterfoliage_cluttered:block/crabapple_fluff",
+  "tintLeaves": false
+}

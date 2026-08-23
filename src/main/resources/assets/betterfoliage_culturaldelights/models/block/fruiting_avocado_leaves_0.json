@@ -1,0 +1,6 @@
+{
+  "loader": "betterfoliage:leaves",
+  "leaves": "culturaldelights:block/fruiting_avocado_leaves_0",
+  "fluff": "betterfoliage_culturaldelights:block/fruiting_avocado_leaves_0_fluff",
+  "tintLeaves": false
+}

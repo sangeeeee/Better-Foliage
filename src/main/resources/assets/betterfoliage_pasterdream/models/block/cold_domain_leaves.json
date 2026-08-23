@@ -1,0 +1,6 @@
+{
+  "loader": "betterfoliage:leaves",
+  "leaves": "pasterdream:block/cold_domain_leaves",
+  "fluff": "betterfoliage_pasterdream:block/cold_domain_fluff",
+  "tintLeaves": false
+}
