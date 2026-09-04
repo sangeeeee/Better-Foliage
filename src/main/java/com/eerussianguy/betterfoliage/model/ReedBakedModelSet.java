@@ -78,6 +78,11 @@ public class ReedBakedModelSet
         return litQuads;
     }
 
+    public List<BakedQuad> getQuads(int model, @Nullable BlockState state, RandomSource random, ModelData data, @Nullable RenderType renderType)
+    {
+        return models[model].getQuads(state, null, random, data, renderType);
+    }
+
     private BakedModel build(TextureAtlasSprite sprite, float xOffset, float zOffset)
     {
         BlockElement positive = buildPlane(xOffset, zOffset, 45.0F);

@@ -27,6 +27,10 @@ import org.joml.Vector3f;
 
 public class LeavesBakedModel extends BFBakedModel
 {
+    private static final float MAX_ROTATION_VARIATION = 3.0F;
+    private static final int ROTATION_PERMUTATION_MULTIPLIER = 37;
+    private static final int ROTATION_PERMUTATION_OFFSET = 23;
+
     private final boolean isOverlay;
     private final boolean tintLeaves;
 
@@ -86,14 +90,29 @@ public class LeavesBakedModel extends BFBakedModel
         from.add(moveVec);
         to.add(moveVec);
 
-        BlockElement part = new BlockElement(from, to, mapFacesIn, makeRotation(45f), false);
-        BlockElement partR = new BlockElement(from, to, mapFacesIn, makeRotation(-45f), false);
+        final float rotationVariation = rotationVariation(ordinal);
+        BlockElement part = new BlockElement(from, to, mapFacesIn, makeRotation(45f + rotationVariation), false);
+        BlockElement partR = new BlockElement(from, to, mapFacesIn, makeRotation(-45f + rotationVariation), false);
 
         SimpleBakedModel.Builder builder = new SimpleBakedModel.Builder(blockModel, ItemOverrides.EMPTY, false).particle(leavesTex);
         Helpers.assembleFaces(builder, part, fluffTex);
         Helpers.assembleFaces(builder, partR, fluffTex);
 
         crosses[ordinal] = builder.build(NamedRenderTypeManager.get(ResourceLocation.parse("cutout_mipped")));
+    }
+
+    private float rotationVariation(int ordinal)
+    {
+        if (crosses.length <= 1)
+        {
+            return 0.0F;
+        }
+        final int permuted = Math.floorMod(
+            ordinal * ROTATION_PERMUTATION_MULTIPLIER + ROTATION_PERMUTATION_OFFSET,
+            crosses.length
+        );
+        final float normalized = (float) permuted / (crosses.length - 1);
+        return (normalized * 2.0F - 1.0F) * MAX_ROTATION_VARIATION;
     }
 
     private BlockElementRotation makeRotation(float degrees)

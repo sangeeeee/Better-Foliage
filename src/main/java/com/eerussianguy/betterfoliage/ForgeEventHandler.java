@@ -26,6 +26,7 @@ import com.eerussianguy.betterfoliage.particle.SoulParticle;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.AddSectionGeometryEvent;
 import net.neoforged.neoforge.common.NeoForge;
+import com.eerussianguy.betterfoliage.model.ReedSectionRenderer;
 import com.eerussianguy.betterfoliage.model.WaterPetalRenderer;
 
 public class ForgeEventHandler
@@ -42,12 +43,14 @@ public class ForgeEventHandler
 
     private static void onAddSectionGeometry(AddSectionGeometryEvent event)
     {
+        ReedSectionRenderer.addSectionGeometry(event);
         WaterPetalRenderer.addSectionGeometry(event);
     }
 
     public static void clearCache()
     {
         SPRITE_CACHE.clear();
+        ReedSectionRenderer.clearCache();
     }
 
     private static void onClientTick(ClientTickEvent.Post event)
