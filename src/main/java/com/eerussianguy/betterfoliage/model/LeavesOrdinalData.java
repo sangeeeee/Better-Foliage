@@ -12,6 +12,7 @@ public final class LeavesOrdinalData
 
     private final int ordinal;
     private final float rotationOffset;
+    private final int snowTexture;
 
     public static LeavesOrdinalData fromRenderRandom(RandomSource random)
     {
@@ -36,6 +37,7 @@ public final class LeavesOrdinalData
         // model cache. The value is stable in [-1, 1) and is scaled to the configured model range by the renderer.
         final long rotationBits = mix64(randomState + SPLITMIX_GAMMA);
         rotationOffset = ((rotationBits >>> 40) * UNIT_FLOAT) * 2.0F - 1.0F;
+        snowTexture = boundedIndex(mix64(randomState + 2L * SPLITMIX_GAMMA), SnowyLeavesOverlay.TEXTURE_COUNT);
     }
 
     public int get()
@@ -46,6 +48,11 @@ public final class LeavesOrdinalData
     public float rotationOffset()
     {
         return rotationOffset;
+    }
+
+    public int snowTexture()
+    {
+        return snowTexture;
     }
 
     private static int boundedIndex(long randomBits, int bound)

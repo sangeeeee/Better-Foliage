@@ -8,10 +8,12 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.*;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
 import com.eerussianguy.betterfoliage.BFConfig;
@@ -37,6 +39,7 @@ public class LeavesBakedModel extends BFBakedModel
 
     private final BlockModel blockModel;
     private final BakedModel[] crosses;
+    private final SnowyLeavesOverlay snowOverlay;
 
     private final BakedModel core;
     @Nullable private final BakedModel outerCore;
@@ -50,6 +53,7 @@ public class LeavesBakedModel extends BFBakedModel
         this.leavesTex = spriteGetter.apply(leaves);
         this.fluffTex = spriteGetter.apply(fluff);
         this.crosses = new BakedModel[(int) Math.pow(BFConfig.CLIENT.leavesCacheSize.get(), 3)];
+        this.snowOverlay = SnowyLeavesOverlay.get(spriteGetter, false);
         this.core = buildBlock(leavesTex, tintLeaves);
         this.outerCore = isOverlay ? buildBlock(spriteGetter.apply(overlay), tintOverlay) : null;
         buildCrosses();
@@ -136,7 +140,15 @@ public class LeavesBakedModel extends BFBakedModel
             if (!SodiumLeafCullingCompat.shouldSuppressFluff())
             {
                 List<BakedQuad> crossQuads = crosses[data.get()].getQuads(state, side, rand, extraData, renderType);
-                quads.addAll(applyPositionRotation(crossQuads, data.rotationOffset() * MAX_ROTATION_VARIATION));
+                final float rotation = data.rotationOffset() * MAX_ROTATION_VARIATION;
+                quads.addAll(applyPositionRotation(crossQuads, rotation));
+                if (SnowyLeavesData.isSnowy(extraData))
+                {
+                    quads.addAll(applyPositionRotation(
+                        snowOverlay.getQuads(data, state, side, rand, extraData, renderType),
+                        rotation
+                    ));
+                }
             }
             if (isOverlay)
             {
@@ -146,6 +158,23 @@ public class LeavesBakedModel extends BFBakedModel
             return quads;
         }
         return coreQuads;
+    }
+
+    @Override
+    @NotNull
+    public ModelData getModelData(
+        @NotNull BlockAndTintGetter level,
+        @NotNull BlockPos pos,
+        @NotNull BlockState state,
+        @NotNull ModelData data
+    )
+    {
+        return SnowyLeavesData.append(level, pos, data);
+    }
+
+    public static void clearSnowOverlayCache()
+    {
+        SnowyLeavesOverlay.clearCache();
     }
 
     /**

@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.function.Function;
 
 import com.google.common.collect.Maps;
 import com.eerussianguy.betterfoliage.BFConfig;
@@ -19,13 +20,17 @@ import net.minecraft.client.renderer.block.model.BlockElementRotation;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.BlockModelRotation;
+import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.SimpleBakedModel;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.NamedRenderTypeManager;
 import net.neoforged.neoforge.client.model.BakedModelWrapper;
@@ -45,10 +50,18 @@ public final class ResourcePackLeavesBakedModel extends BakedModelWrapper<BakedM
 
     /** A model may choose several bushy textures through a weighted blockstate, so build each texture lazily. */
     private final ConcurrentMap<FluffKey, BakedModel[]> fluffModels = new ConcurrentHashMap<>();
+    private final SnowyLeavesOverlay snowOverlay;
 
-    public ResourcePackLeavesBakedModel(BakedModel originalModel)
+    public ResourcePackLeavesBakedModel(
+        BakedModel originalModel,
+        Function<Material, TextureAtlasSprite> spriteGetter
+    )
     {
         super(originalModel);
+        this.snowOverlay = SnowyLeavesOverlay.get(
+            texture -> spriteGetter.apply(new Material(TextureAtlas.LOCATION_BLOCKS, texture)),
+            true
+        );
     }
 
     @Override
@@ -118,12 +131,32 @@ public final class ResourcePackLeavesBakedModel extends BakedModelWrapper<BakedM
             final FluffKey key = new FluffKey(Objects.requireNonNull(fluffSprite), fluffTintIndex);
             final BakedModel[] crosses = fluffModels.computeIfAbsent(key, this::buildCrosses);
             final List<BakedQuad> crossQuads = crosses[variation.get()].getQuads(state, side, random, data, renderType);
+            final float rotation = variation.rotationOffset() * LeavesBakedModel.MAX_ROTATION_VARIATION;
             result.addAll(LeavesBakedModel.applyPositionRotation(
                 crossQuads,
-                variation.rotationOffset() * LeavesBakedModel.MAX_ROTATION_VARIATION
+                rotation
             ));
+            if (SnowyLeavesData.isSnowy(data))
+            {
+                result.addAll(LeavesBakedModel.applyPositionRotation(
+                    snowOverlay.getQuads(variation, state, side, random, data, renderType),
+                    rotation
+                ));
+            }
         }
         return result;
+    }
+
+    @Override
+    @NotNull
+    public ModelData getModelData(
+        @NotNull BlockAndTintGetter level,
+        @NotNull BlockPos pos,
+        @NotNull BlockState state,
+        @NotNull ModelData data
+    )
+    {
+        return SnowyLeavesData.append(level, pos, originalModel.getModelData(level, pos, state, data));
     }
 
     private static boolean isBushyQuad(BakedQuad quad)

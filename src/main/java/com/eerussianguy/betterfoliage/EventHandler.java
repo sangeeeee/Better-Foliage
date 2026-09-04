@@ -62,6 +62,7 @@ public class EventHandler
     private static void afterTextureStitch(final TextureAtlasStitchedEvent event)
     {
         ForgeEventHandler.clearCache();
+        LeavesBakedModel.clearSnowOverlayCache();
     }
 
     private static void onLoaderRegister(final ModelEvent.RegisterGeometryLoaders event)
@@ -105,7 +106,10 @@ public class EventHandler
             {
                 continue;
             }
-            entry.setValue(wrappers.computeIfAbsent(model, ResourcePackLeavesBakedModel::new));
+            entry.setValue(wrappers.computeIfAbsent(
+                model,
+                original -> new ResourcePackLeavesBakedModel(original, event.getTextureGetter())
+            ));
         }
     }
 
