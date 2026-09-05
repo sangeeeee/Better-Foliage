@@ -60,7 +60,7 @@ public final class IrisShaderCompat
         return -1;
     }
 
-    /** Starts an Iris terrain-block context whose origin is the block containing the reed's base. */
+    /** Starts an Iris terrain-block context at the logical origin of synthetic vegetation geometry. */
     static boolean beginGroundVegetation(VertexConsumer consumer, int vegetationId, int localX, int localY, int localZ)
     {
         if (API == null || vegetationId < 0)

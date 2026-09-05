@@ -72,7 +72,8 @@ public final class WaterPetalRenderer
         }
         final List<PetalPatch> immutablePatches = List.copyOf(patches);
         final Map<ResourceLocation, TextureAtlasSprite> immutableSprites = Map.copyOf(sprites);
-        event.addRenderer(context -> render(immutablePatches, immutableSprites, context));
+        final int vegetationId = IrisShaderCompat.groundVegetationId();
+        event.addRenderer(context -> render(immutablePatches, immutableSprites, vegetationId, context));
     }
 
     /**
@@ -169,28 +170,53 @@ public final class WaterPetalRenderer
         return false;
     }
 
-    private static PetalPatch createPatch(int localX, int localY, int localZ, float surfaceHeight, int light, long populationBits, ResourceLocation texture)
+    private static PetalPatch createPatch(int localX, int waterLocalY, int localZ, float surfaceHeight, int light, long populationBits, ResourceLocation texture)
     {
         final long variantBits = mix64(populationBits);
         final int quadrantMask = 1 + (int) Long.remainderUnsigned(variantBits, 15L);
         final int rotation = (int) ((variantBits >>> 8) & 3L);
         final float xOffset = byteOffset(variantBits >>> 16);
         final float zOffset = byteOffset(variantBits >>> 24);
-        return new PetalPatch(localX, localY + surfaceHeight + SURFACE_EPSILON, localZ, quadrantMask, rotation, xOffset, zOffset, light, texture);
+        return new PetalPatch(localX, waterLocalY, waterLocalY + surfaceHeight + SURFACE_EPSILON, localZ, quadrantMask, rotation, xOffset, zOffset, light, texture);
     }
 
-    private static void render(List<PetalPatch> patches, Map<ResourceLocation, TextureAtlasSprite> sprites, AddSectionGeometryEvent.SectionRenderingContext context)
+    private static void render(
+        List<PetalPatch> patches,
+        Map<ResourceLocation, TextureAtlasSprite> sprites,
+        int vegetationId,
+        AddSectionGeometryEvent.SectionRenderingContext context
+    )
     {
         final VertexConsumer consumer = context.getOrCreateChunkBuffer(RENDER_TYPE);
         final PoseStack.Pose pose = context.getPoseStack().last();
         for (PetalPatch patch : patches)
         {
-            final TextureAtlasSprite sprite = sprites.get(patch.texture());
-            for (int quadrant = 0; quadrant < 4; quadrant++)
+            // Associate only this synthetic patch with Iris' ordinary vegetation material. The water block beneath
+            // the patch is its logical origin, leaving the surface vertices free to move instead of anchoring them
+            // as the base of a crop. This is the same optional bridge used by Better Foliage reeds.
+            final boolean irisContext = IrisShaderCompat.beginGroundVegetation(
+                consumer,
+                vegetationId,
+                (int) patch.localX(),
+                patch.waterLocalY(),
+                (int) patch.localZ()
+            );
+            try
             {
-                if ((patch.quadrantMask() & (1 << quadrant)) != 0)
+                final TextureAtlasSprite sprite = sprites.get(patch.texture());
+                for (int quadrant = 0; quadrant < 4; quadrant++)
                 {
-                    emitQuadrant(consumer, pose, sprite, patch, quadrant);
+                    if ((patch.quadrantMask() & (1 << quadrant)) != 0)
+                    {
+                        emitQuadrant(consumer, pose, sprite, patch, quadrant);
+                    }
+                }
+            }
+            finally
+            {
+                if (irisContext)
+                {
+                    IrisShaderCompat.endGroundVegetation(consumer);
                 }
             }
         }
@@ -378,7 +404,7 @@ public final class WaterPetalRenderer
         return value ^ (value >>> 31);
     }
 
-    private record PetalPatch(float localX, float localY, float localZ, int quadrantMask, int rotation, float xOffset, float zOffset, int light, ResourceLocation texture)
+    private record PetalPatch(float localX, int waterLocalY, float localY, float localZ, int quadrantMask, int rotation, float xOffset, float zOffset, int light, ResourceLocation texture)
     {
     }
 }

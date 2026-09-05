@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-/** Supplies Iris metadata for NeoForge additional-section geometry compiled through Sodium's fallback consumer. */
+/** Supplies Iris vegetation metadata for NeoForge additional-section geometry compiled through Sodium's fallback consumer. */
 @Pseudo
 @Mixin(targets = "net.caffeinemc.mods.sodium.client.render.chunk.compile.buffers.ChunkVertexConsumer", remap = false)
 public abstract class SodiumChunkVertexConsumerMixin implements ReedShaderContext
