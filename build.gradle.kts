@@ -45,6 +45,10 @@ java {
 repositories {
     mavenLocal()
     exclusiveContent {
+        forRepository { maven("https://api.modrinth.com/maven") }
+        filter { includeGroup("maven.modrinth") }
+    }
+    exclusiveContent {
         forRepository { maven("https://www.cursemaven.com") }
         filter { includeGroup("curse.maven") }
     }
@@ -59,6 +63,8 @@ sourceSets {
 }
 
 dependencies {
+    // Ecliptic Seasons 1.21.1 / 0.15.0-rc-3. Optional client bridge; never bundled or added to runtime.
+    compileOnly("maven.modrinth:ecliptic-seasons:Tok0V0sp") { isTransitive = false }
 }
 
 neoForge {

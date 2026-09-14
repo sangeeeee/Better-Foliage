@@ -1,0 +1,6 @@
+{
+  "loader": "betterfoliage:leaves",
+  "leaves": "cookscollection:block/lemon_leaves",
+  "fluff": "betterfoliage_cookscollection:block/lemon_fluff",
+  "tintLeaves": false
+}

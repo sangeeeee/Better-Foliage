@@ -169,7 +169,7 @@ public class LeavesBakedModel extends BFBakedModel
         @NotNull ModelData data
     )
     {
-        return SnowyLeavesData.append(level, pos, data);
+        return SnowyLeavesData.append(level, pos, state, data);
     }
 
     public static void clearSnowOverlayCache()

@@ -1,0 +1,1 @@
+bf-compat-generator ".\cookscollection-0.5.8.jar" --output ".\cookscollection"

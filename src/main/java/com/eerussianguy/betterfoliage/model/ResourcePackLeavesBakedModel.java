@@ -156,7 +156,7 @@ public final class ResourcePackLeavesBakedModel extends BakedModelWrapper<BakedM
         @NotNull ModelData data
     )
     {
-        return SnowyLeavesData.append(level, pos, originalModel.getModelData(level, pos, state, data));
+        return SnowyLeavesData.append(level, pos, state, originalModel.getModelData(level, pos, state, data));
     }
 
     private static boolean isBushyQuad(BakedQuad quad)
