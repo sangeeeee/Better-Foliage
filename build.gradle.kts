@@ -33,7 +33,7 @@ val generateModMetadata = tasks.register<ProcessResources>("generateModMetadata"
 
 
 base {
-    archivesName.set("BetterFoliageRenewed-NeoForge-$minecraftVersion")
+    archivesName.set("BetterFoliageReborn-NeoForge-$minecraftVersion")
     group = "com.eerussianguy.betterfoliage"
     version = modVersion
 }
@@ -104,6 +104,7 @@ tasks {
     jar {
         manifest {
             attributes["Implementation-Version"] = project.version
+            attributes["Implementation-Title"] = "Better Foliage Reborn"
         }
     }
 
