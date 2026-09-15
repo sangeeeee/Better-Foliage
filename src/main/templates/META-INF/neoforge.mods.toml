@@ -5,9 +5,10 @@ license="MIT License"
 issueTrackerURL="https://github.com/eerussianguy/Better-Foliage/issues" #optional
 [[mods]] #mandatory
 modId="betterfoliage" #mandatory
+version="${modVersion}" #mandatory
 displayName="Better Foliage" #mandatory
 displayURL="https://github.com/eerussianguy/Better-Foliage" #optional
-logoFile="examplemod.png" #optional
+logoFile="logo.png" #optional
 credits="Paint_Ninja for the commission" #optional
 authors="EERussianguy, PaintNinja" #optional
 displayTest="IGNORE_ALL_VERSION"

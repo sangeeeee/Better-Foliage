@@ -13,7 +13,7 @@ val parchmentVersion: String = "2024.07.07"
 val parchmentMinecraftVersion: String = "1.21"
 
 val modId: String = "betterfoliage"
-val modVersion: String = System.getenv("VERSION") ?: "0.0.0-indev"
+val modVersion: String = System.getenv("VERSION") ?: "1.0.0"
 val modJavaVersion: String = "21"
 val modIsInCI: Boolean = !modVersion.contains("-indev")
 
