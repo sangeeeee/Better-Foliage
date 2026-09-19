@@ -19,6 +19,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import com.eerussianguy.betterfoliage.BFConfig;
 import com.eerussianguy.betterfoliage.Helpers;
 import com.eerussianguy.betterfoliage.compat.SodiumLeafCullingCompat;
+import com.eerussianguy.betterfoliage.compat.CullLeavesCompat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.neoforged.neoforge.client.NamedRenderTypeManager;
 import net.neoforged.neoforge.client.model.IQuadTransformer;
@@ -53,7 +54,7 @@ public class LeavesBakedModel extends BFBakedModel
         this.leavesTex = spriteGetter.apply(leaves);
         this.fluffTex = spriteGetter.apply(fluff);
         this.crosses = new BakedModel[(int) Math.pow(BFConfig.CLIENT.leavesCacheSize.get(), 3)];
-        this.snowOverlay = SnowyLeavesOverlay.get(spriteGetter, false);
+        this.snowOverlay = SnowyLeavesOverlay.get(spriteGetter, CullLeavesCompat.usesIndependentFluff());
         this.core = buildBlock(leavesTex, tintLeaves);
         this.outerCore = isOverlay ? buildBlock(spriteGetter.apply(overlay), tintOverlay) : null;
         buildCrosses();
@@ -96,8 +97,8 @@ public class LeavesBakedModel extends BFBakedModel
         BlockElement partR = new BlockElement(from, to, mapFacesIn, makeRotation(-45f), false);
 
         SimpleBakedModel.Builder builder = new SimpleBakedModel.Builder(blockModel, ItemOverrides.EMPTY, false).particle(leavesTex);
-        Helpers.assembleFaces(builder, part, fluffTex);
-        Helpers.assembleFaces(builder, partR, fluffTex);
+        assembleFluffFaces(builder, part);
+        assembleFluffFaces(builder, partR);
 
         crosses[ordinal] = builder.build(NamedRenderTypeManager.get(ResourceLocation.parse("cutout_mipped")));
     }
@@ -137,7 +138,7 @@ public class LeavesBakedModel extends BFBakedModel
         if (data != null)
         {
             List<BakedQuad> quads = new ArrayList<>(coreQuads);
-            if (!SodiumLeafCullingCompat.shouldSuppressFluff())
+            if (!SodiumLeafCullingCompat.shouldSuppressFluff() && !CullLeavesCompat.shouldSuppressFluff(extraData))
             {
                 List<BakedQuad> crossQuads = crosses[data.get()].getQuads(state, side, rand, extraData, renderType);
                 final float rotation = data.rotationOffset() * MAX_ROTATION_VARIATION;
@@ -169,7 +170,22 @@ public class LeavesBakedModel extends BFBakedModel
         @NotNull ModelData data
     )
     {
-        return SnowyLeavesData.append(level, pos, state, data);
+        return CullLeavesCompat.append(level, pos, state, SnowyLeavesData.append(level, pos, state, data));
+    }
+
+    private void assembleFluffFaces(SimpleBakedModel.Builder builder, BlockElement part)
+    {
+        if (!CullLeavesCompat.usesIndependentFluff())
+        {
+            Helpers.assembleFaces(builder, part, fluffTex);
+            return;
+        }
+        for (Map.Entry<Direction, BlockElementFace> face : part.faces.entrySet())
+        {
+            builder.addUnculledFace(Helpers.makeBakedQuad(
+                part, face.getValue(), fluffTex, face.getKey(), BlockModelRotation.X0_Y0
+            ));
+        }
     }
 
     public static void clearSnowOverlayCache()

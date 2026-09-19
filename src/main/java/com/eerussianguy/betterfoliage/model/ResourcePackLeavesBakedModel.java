@@ -12,6 +12,7 @@ import com.google.common.collect.Maps;
 import com.eerussianguy.betterfoliage.BFConfig;
 import com.eerussianguy.betterfoliage.Helpers;
 import com.eerussianguy.betterfoliage.compat.SodiumLeafCullingCompat;
+import com.eerussianguy.betterfoliage.compat.CullLeavesCompat;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockElement;
@@ -123,7 +124,7 @@ public final class ResourcePackLeavesBakedModel extends BakedModelWrapper<BakedM
 
         // Original bushy quads have already been removed, so a suppressed leaf never reaches Sodium Leaf Culling as
         // transparent geometry that it could force into the solid render pass.
-        if (!SodiumLeafCullingCompat.shouldSuppressFluff())
+        if (!SodiumLeafCullingCompat.shouldSuppressFluff() && !CullLeavesCompat.shouldSuppressFluff(data))
         {
             // Weighted pack models have already consumed their selection value. The next value remains a stable,
             // coordinate-derived source with the same uniform offset/rotation distribution used by BF models.
@@ -156,7 +157,8 @@ public final class ResourcePackLeavesBakedModel extends BakedModelWrapper<BakedM
         @NotNull ModelData data
     )
     {
-        return SnowyLeavesData.append(level, pos, state, originalModel.getModelData(level, pos, state, data));
+        return CullLeavesCompat.append(level, pos, state,
+            SnowyLeavesData.append(level, pos, state, originalModel.getModelData(level, pos, state, data)));
     }
 
     private static boolean isBushyQuad(BakedQuad quad)
