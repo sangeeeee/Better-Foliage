@@ -65,6 +65,8 @@ sourceSets {
 dependencies {
     // Ecliptic Seasons 1.21.1 / 0.15.0-rc-3. Optional client bridge; never bundled or added to runtime.
     compileOnly("maven.modrinth:ecliptic-seasons:Tok0V0sp") { isTransitive = false }
+    // Cull Leaves 4.1.1 / NeoForge 1.21–1.21.1. Compile-time only; no runtime dependency or bundling.
+    compileOnly("maven.modrinth:cull-leaves:V7PU4g8I") { isTransitive = false }
 }
 
 neoForge {
