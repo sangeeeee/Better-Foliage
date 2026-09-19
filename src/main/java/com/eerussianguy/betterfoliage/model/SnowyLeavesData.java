@@ -23,8 +23,12 @@ public final class SnowyLeavesData
     public static ModelData append(BlockAndTintGetter level, BlockPos pos, BlockState state, ModelData data)
     {
         final BlockPos.MutableBlockPos above = ABOVE_POS.get().setWithOffset(pos, Direction.UP);
-        final boolean snowy = level.getBlockState(above).is(BlockTags.SNOW)
-            || EclipticSeasonsCompat.isSnowy(level, pos, state);
+        final BlockState aboveState = level.getBlockState(above);
+        // Physical snow (layers or full blocks) always supplies a snowy top. Seasonal snow only
+        // reaches exposed fluff: any non-snow, non-air block above keeps the ordinary fluff.
+        // Short-circuit the optional seasonal query for both covered leaves and physical snow.
+        final boolean snowy = aboveState.is(BlockTags.SNOW)
+            || (aboveState.isAir() && EclipticSeasonsCompat.isSnowy(level, pos, state));
         if (snowy == Boolean.TRUE.equals(data.get(PROPERTY)))
         {
             return data;
