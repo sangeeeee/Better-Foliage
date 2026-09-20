@@ -10,14 +10,12 @@ final class SnowPalette
 {
     final int[] colors;
     private final short[] nearest = new short[32 * 32 * 32];
-    private final int maxError;
 
-    SnowPalette(int[] colors, int maxError)
+    SnowPalette(int[] colors)
     {
         this.colors = colors.clone();
         Arrays.sort(this.colors);
         colors = this.colors;
-        this.maxError = maxError;
         if (colors.length == 0 || colors.length > 4096) throw new IllegalArgumentException("palette size");
         for (int cell = 0; cell < nearest.length; cell++)
         {
@@ -43,8 +41,8 @@ final class SnowPalette
         int exact = Arrays.binarySearch(colors, rgb);
         if (exact >= 0) return exact;
         int cell = ((rgb >> 19) & 31) << 10 | ((rgb >> 11) & 31) << 5 | ((rgb >> 3) & 31);
-        int index = nearest[cell] & 0xffff;
-        return channelError(rgb, colors[index]) <= maxError ? index : -1;
+        // Always approximate with the nearest precomputed cell color, even for out-of-palette tints.
+        return nearest[cell] & 0xffff;
     }
 
     static int channelError(int a, int b)
@@ -53,7 +51,7 @@ final class SnowPalette
             Math.max(Math.abs((a >> 8 & 255) - (b >> 8 & 255)), Math.abs((a & 255) - (b & 255))));
     }
 
-    static SnowPalette load(ResourceManager resources, int step, int limit, int error, String extras)
+    static SnowPalette load(ResourceManager resources, int step, int limit, String extras)
     {
         TreeSet<Integer> sampled = new TreeSet<>();
         resources.listResources("textures/colormap", id -> id.getPath().endsWith(".png")
@@ -81,7 +79,7 @@ final class SnowPalette
         Integer[] choices = sampled.toArray(Integer[]::new);
         int count = Math.min(limit - fixed.size(), choices.length);
         for (int i = 0; i < count; i++) fixed.add(choices[(int) ((long) i * choices.length / count)]);
-        return new SnowPalette(fixed.stream().mapToInt(Integer::intValue).toArray(), error);
+        return new SnowPalette(fixed.stream().mapToInt(Integer::intValue).toArray());
     }
 
     private static int quantize(int value, int step) { return Math.min(255, (value + step / 2) / step * step); }

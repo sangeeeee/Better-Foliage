@@ -94,7 +94,7 @@ public final class SnowCompositeSprites
         final Path cacheDirectory = mc == null ? null : mc.gameDirectory.toPath().resolve(".cache").resolve("better-foliage");
         final boolean paletteEnabled = resources != null && mc != null && config.snowPaletteEnabled.get();
         final SnowPalette palette = paletteEnabled ? SnowPalette.load(resources, config.snowPaletteStep.get(),
-            config.snowPaletteMaxColors.get(), config.snowPaletteMaxError.get(), config.snowExtraColors.get()) : null;
+            config.snowPaletteMaxColors.get(), config.snowExtraColors.get()) : null;
         return generate(original, resources, palette, cacheDirectory,
             (mc == null ? 128L : config.snowAtlasBudget.get()) * 1024 * 1024,
             (mc == null ? 512L : config.snowDiskBudget.get()) * 1024 * 1024, maxTextureSize);

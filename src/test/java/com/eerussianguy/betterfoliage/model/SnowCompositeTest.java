@@ -83,7 +83,7 @@ public final class SnowCompositeTest
         System.out.println("Stay True pack: " + tinted.size() + " tinted bushy textures, " + untinted.size() + " untinted bushy textures recognized");
         var manager = SnowPaletteCacheTest.manager(Map.of(id("minecraft:textures/colormap/foliage.png"),
             new net.minecraft.server.packs.resources.Resource(null, () -> new java.io.ByteArrayInputStream(foliageMap))));
-        SnowPalette palette = SnowPalette.load(manager, 8, 1024, 8, "");
+        SnowPalette palette = SnowPalette.load(manager, 8, 1024, "");
         int covered = 0, total = 0, largestError = 0;
         try (NativeImage map = NativeImage.read(new java.io.ByteArrayInputStream(foliageMap)))
         {

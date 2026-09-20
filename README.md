@@ -56,7 +56,7 @@ Untinted fluff receives three automatically composited snow textures during bloc
 
 Tinting is determined from model data, not whether the image looks gray: BF uses `tintLeaves`; supported resource-pack bushy faces use their actual tint indices. This includes Stay True's tinted oak-style bushy models and untinted birch-style models. Vanilla model inheritance, texture aliases and base animation frames are preserved.
 
-The palette samples the **active** foliage/leaves colormaps in `textures/colormap` (including mod namespaces), adds white and vanilla fixed species colors, and optionally accepts extra RGB colors. During mesh construction the real block color callback (tint index 0) selects a close palette entry using a precomputed lookup. No image processing, disk access, world-wide scanning or per-position image cache is needed during rendering. The original two-layer effect remains the fallback for unrepresented seasonal/mod colors, unsupported tint indices, missing/custom assets, independently animated snow overlays and over-budget textures. Arbitrary mod color callbacks cannot be exhaustively enumerated in advance.
+The palette samples the **active** foliage/leaves colormaps in `textures/colormap` (including mod namespaces), adds white and vanilla fixed species colors, and optionally accepts extra RGB colors. During mesh construction the real block color callback (tint index 0) selects a close palette entry using a precomputed lookup. Unrepresented seasonal/mod colors always use a nearby palette color, regardless of color difference; they do not trigger layered rendering. No image processing, disk access, world-wide scanning or per-position image cache is needed during rendering. The original two-layer effect remains the fallback for unavailable tint data, unsupported tint indices, missing/custom assets, independently animated snow overlays and over-budget textures. Arbitrary mod color callbacks cannot be exhaustively enumerated in advance.
 
 Client configuration section `[snowPalette]` (reload resources after changing):
 
@@ -65,12 +65,11 @@ Client configuration section `[snowPalette]` (reload resources after changing):
 | `enabled` | `true` | Enable finite-palette single-layer rendering for tinted fluff |
 | `colorStep` | `8` | RGB sampling interval; smaller values generate a finer, larger palette |
 | `maxColors` | `1024` | Maximum palette entries, including fixed colors |
-| `maxChannelError` | `8` | Maximum allowed difference from the actual block tint in any 0–255 RGB channel; otherwise retain two layers |
 | `atlasBudgetMiB` | `128` | Budget for added image pixels including estimated mipmaps; atlas packing overhead is additional |
 | `diskBudgetMiB` | `512` | Total compressed cache budget; oldest BF bundles are evicted after reload |
 | `extraColors` | `""` | Optional exact RGB colors, e.g. `"FF8800,AA3377"`, for known seasonal/mod tints |
 
-The default sampling interval has at most 4/255 rounding error per sampled channel; actual palette selection is separately bounded by `maxChannelError`. This is an approximation of each block's tint, not an exact reproduction of every renderer's per-vertex biome blending. A smaller interval increases texture count and may make more textures hit the atlas budget and use the layered fallback. Untinted composites get budget priority, and additional atlas-size headroom is reserved.
+The default sampling interval has at most 4/255 rounding error per sampled channel, but actual palette selection has no color-error cutoff (the former `maxChannelError` setting was removed). Colors far outside the palette can visibly differ; `extraColors` can improve their representation. This is an approximation of each block's tint, not an exact reproduction of every renderer's per-vertex biome blending. A smaller interval increases texture count and may make more textures hit the atlas budget and use the layered fallback. Untinted composites get budget priority, and additional atlas-size headroom is reserved.
 
 ### Persistent snow texture cache
 

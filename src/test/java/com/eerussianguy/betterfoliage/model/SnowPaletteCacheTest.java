@@ -17,15 +17,15 @@ final class SnowPaletteCacheTest
     private static int checks;
     static void run() throws Exception
     {
-        SnowPalette palette = new SnowPalette(new int[]{0xffffff, 0x80a755, 0x619961}, 8);
+        SnowPalette palette = new SnowPalette(new int[]{0xffffff, 0x80a755, 0x619961});
         check(palette.colors[palette.select(0x619961)] == 0x619961, "fixed species tint stays exact");
         check(palette.colors[palette.select(0xffffff)] == 0xffffff, "white remains untinted");
-        check(palette.select(0xff0000) == -1, "unknown mod tint falls back instead of turning green");
+        check(palette.select(0xff0000) >= 0, "unknown mod tint approximated without layered fallback");
         Random random = new Random(1001);
         for (int i = 0; i < 10000; i++)
         {
             int rgb = random.nextInt(0x1000000), index = palette.select(rgb);
-            check(index < 0 || SnowPalette.channelError(rgb, palette.colors[index]) <= 8, "selected color error is bounded");
+            check(index >= 0 && index < palette.colors.length, "every RGB color selects an existing palette entry");
             int abgr = random.nextInt();
             check(SnowPalette.tint(abgr, 0xffffff) == abgr, "white preserves every pixel bit");
             check((SnowPalette.tint(abgr, rgb) >>> 24) == (abgr >>> 24), "tint preserves alpha");
@@ -37,7 +37,7 @@ final class SnowPaletteCacheTest
         {
             for (int y = 0; y < 4; y++) for (int x = 0; x < 4; x++) colormap.setPixelRGBA(x, y, 0xff537eab);
             resources.put(id("minecraft:textures/colormap/foliage.png"), resource(colormap.asByteArray()));
-            SnowPalette sampled = SnowPalette.load(manager, 8, 1024, 8, "FF8800,invalid");
+            SnowPalette sampled = SnowPalette.load(manager, 8, 1024, "FF8800,invalid");
             check(sampled.select(0xab7e53) >= 0, "active pack colormap sampled in correct RGB order");
             check(sampled.colors[sampled.select(0xff8800)] == 0xff8800, "extra seasonal color exact");
             check(sampled.colors.length == 7, "deduplicate map colors plus fixed colors");
@@ -83,7 +83,7 @@ final class SnowPaletteCacheTest
             var set = SnowCompositeSprites.findSet(originals.getFirst().name(), atlas::get);
             check(set.untinted.length == 3, "untinted variants remain available for mixed texture usage");
             check(set.select(0x619961, 2).contents().name().equals(SnowCompositeSprites.id(originals.getFirst().name(), 2, 0x619961)), "renderer chooses correct palette row and snow variant");
-            check(set.select(0xff0000, 0) == null && set.select(null, 0) == null, "unsupported tint or absent model data stays layered");
+            check(set.select(0xff0000, 0) != null && set.select(null, 0) == null, "distant colors stay single-layer; absent model data stays layered");
 
             SpriteContents[] snow = originals.subList(1, 4).toArray(SpriteContents[]::new);
             String before = SnowTextureCache.fingerprint(originals.getFirst(), snow, palette.colors);
