@@ -129,7 +129,7 @@ public final class ResourcePackLeavesBakedModel extends BakedModelWrapper<BakedM
 
         // Original bushy quads have already been removed, so a suppressed leaf never reaches Sodium Leaf Culling as
         // transparent geometry that it could force into the solid render pass.
-        if (!SodiumLeafCullingCompat.shouldSuppressFluff() && !CullLeavesCompat.shouldSuppressFluff(data))
+        if (FluffVisibilityData.allowsFluff(data, SodiumLeafCullingCompat.shouldSuppressFluff(), CullLeavesCompat.shouldSuppressFluff(data)))
         {
             // Weighted pack models have already consumed their selection value. The next value remains a stable,
             // coordinate-derived source with the same uniform offset/rotation distribution used by BF models.
@@ -169,7 +169,6 @@ public final class ResourcePackLeavesBakedModel extends BakedModelWrapper<BakedM
     )
     {
         final ModelData culled = CullLeavesCompat.append(level, pos, state, originalModel.getModelData(level, pos, state, data));
-        if (CullLeavesCompat.shouldSuppressFluff(culled)) return culled;
         final ModelData selected = FluffVisibilityData.append(level, pos, state, culled);
         return FluffVisibilityData.mask(selected) == 0 ? selected : SnowTintData.append(level, pos, state, selected);
     }

@@ -25,6 +25,7 @@ public final class SodiumLeafCullingCompat
         Direction.EAST
     };
     private static final ThreadLocal<Boolean> SUPPRESS_FLUFF = ThreadLocal.withInitial(() -> Boolean.FALSE);
+    private static final ThreadLocal<Boolean> PRESERVE_TOP_ALPHA = ThreadLocal.withInitial(() -> Boolean.FALSE);
     private static final ThreadLocal<BlockPos.MutableBlockPos> NEIGHBOR_POS = ThreadLocal.withInitial(BlockPos.MutableBlockPos::new);
     private static final Api API = loadApi();
     private static volatile boolean broken;
@@ -41,6 +42,7 @@ public final class SodiumLeafCullingCompat
     /** Establishes the leaf currently being compiled before Sodium Leaf Culling processes any of its quads. */
     public static void beginLeaf(Object sodiumRenderer, BlockPos pos)
     {
+        PRESERVE_TOP_ALPHA.set(Boolean.FALSE);
         if (!isAvailable())
         {
             return;
@@ -70,7 +72,11 @@ public final class SodiumLeafCullingCompat
                 case "SOLID_AGGRESSIVE" -> allDirectionsPresent(level, pos, HORIZONTAL_DIRECTIONS);
                 default -> false;
             };
-            SUPPRESS_FLUFF.set(suppress);
+            final boolean fullTop = com.eerussianguy.betterfoliage.model.FluffVisibilityData.requiresFullTop(
+                level.getBlockState(NEIGHBOR_POS.get().setWithOffset(pos, Direction.UP)))
+                && !"SOLID_AGGRESSIVE".equals(qualityName);
+            PRESERVE_TOP_ALPHA.set(fullTop);
+            SUPPRESS_FLUFF.set(suppress && !fullTop);
         }
         catch (ReflectiveOperationException | LinkageError exception)
         {
@@ -82,11 +88,15 @@ public final class SodiumLeafCullingCompat
 
     public static void endLeaf()
     {
+        PRESERVE_TOP_ALPHA.set(Boolean.FALSE);
         if (API != null)
         {
             SUPPRESS_FLUFF.set(Boolean.FALSE);
         }
     }
+
+    /** Restrict the opaque-material exception to the leaf currently being compiled. */
+    public static boolean preserveTopAlpha() { return PRESERVE_TOP_ALPHA.get(); }
 
     public static boolean shouldSuppressFluff()
     {

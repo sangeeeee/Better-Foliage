@@ -12,12 +12,13 @@ import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.client.model.data.ModelProperty;
 
 /** Two-bit diagonal selection computed once during mesh construction, independent of render RNG/camera. */
-final class FluffVisibilityData
+public final class FluffVisibilityData
 {
     static final int NE_SW = 1, NW_SE = 2, FULL = NE_SW | NW_SE;
     static final int NORTH = 1, EAST = 2, SOUTH = 4, WEST = 8;
     private static final Direction[] HORIZONTAL = {Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST};
     private static final ModelProperty<Integer> PLANES = new ModelProperty<>();
+    private static final ModelProperty<Boolean> FULL_TOP = new ModelProperty<>();
     private static final ThreadLocal<BlockPos.MutableBlockPos> NEIGHBOR = ThreadLocal.withInitial(BlockPos.MutableBlockPos::new);
     private FluffVisibilityData() {}
 
@@ -25,9 +26,10 @@ final class FluffVisibilityData
     {
         var neighbor = NEIGHBOR.get();
         BlockState above = level.getBlockState(neighbor.setWithOffset(pos, Direction.UP));
+        boolean fullTop = requiresFullTop(above);
         var config = BFConfig.CLIENT;
         int mask = FULL;
-        if (config.fluffVisibilityEnabled.get() && !above.isAir() && !above.is(BlockTags.SNOW))
+        if (config.fluffVisibilityEnabled.get() && !fullTop)
         {
             int horizontal = 0;
             for (int i = 0; i < HORIZONTAL.length; i++)
@@ -38,8 +40,30 @@ final class FluffVisibilityData
                 config.fluffCornerSecondChance.get(), config.fluffSideChance.get(), config.fluffBottomChance.get());
         }
         ModelData selected = withMask(data, mask);
+        selected = withFullTop(selected, fullTop);
         // Reuse the already sampled top state, and avoid snow/tint work entirely for invisible fluff.
         return mask == 0 ? selected : SnowyLeavesData.append(level, pos, state, selected, above);
+    }
+
+    public static boolean requiresFullTop(BlockState above)
+    {
+        return above.isAir() || above.is(BlockTags.SNOW)
+            || above.is(net.minecraft.world.level.block.Blocks.SNOW)
+            || above.is(net.minecraft.world.level.block.Blocks.SNOW_BLOCK);
+    }
+
+    static boolean fullTop(ModelData data) { return Boolean.TRUE.equals(data.get(FULL_TOP)); }
+
+    static ModelData withFullTop(ModelData data, boolean fullTop)
+    {
+        return fullTop == fullTop(data) ? data : data.derive().with(FULL_TOP, fullTop).build();
+    }
+
+    static boolean allowsFluff(ModelData data, boolean sodiumHidden, boolean cullLeavesHidden)
+    {
+        // The Sodium bridge already exempts air/snow tops except in SOLID_AGGRESSIVE.
+        // Never override its remaining suppression here.
+        return !sodiumHidden && (fullTop(data) || !cullLeavesHidden);
     }
 
     static int mask(ModelData data)

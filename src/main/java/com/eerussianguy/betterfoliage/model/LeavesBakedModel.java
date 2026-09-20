@@ -147,7 +147,8 @@ public class LeavesBakedModel extends BFBakedModel
         // Diagonal planes are not cube boundary faces. Neighbor face culling must never remove
         // only their north- or south-facing halves; explicit whole-fluff/plane rules apply below.
         final boolean fluffBucket = side == null;
-        if (fluffBucket && planes != 0 && !SodiumLeafCullingCompat.shouldSuppressFluff() && !CullLeavesCompat.shouldSuppressFluff(extraData))
+        if (fluffBucket && planes != 0 && FluffVisibilityData.allowsFluff(extraData,
+            SodiumLeafCullingCompat.shouldSuppressFluff(), CullLeavesCompat.shouldSuppressFluff(extraData)))
         {
             final LeavesOrdinalData variation = LeavesOrdinalData.fromSeed(seed);
             crossQuads = crosses[variation.get()].getQuads(state, side, rand, extraData, renderType);
@@ -181,8 +182,7 @@ public class LeavesBakedModel extends BFBakedModel
     )
     {
         final ModelData culled = CullLeavesCompat.append(level, pos, state, data);
-        // Hidden fluff cannot display snow. Visible leaves always recompute snow, including reused ModelData.
-        if (CullLeavesCompat.shouldSuppressFluff(culled)) return culled;
+        // Top-air/snow must be sampled even if another mod marked the leaf as enclosed.
         final ModelData selected = FluffVisibilityData.append(level, pos, state, culled);
         return tintLeaves && FluffVisibilityData.mask(selected) != 0 ? SnowTintData.append(level, pos, state, selected) : selected;
     }

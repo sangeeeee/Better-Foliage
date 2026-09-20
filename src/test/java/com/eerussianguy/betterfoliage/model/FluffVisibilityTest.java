@@ -31,6 +31,15 @@ final class FluffVisibilityTest
         ModelData hidden = withMask(ModelData.EMPTY, 0);
         check(mask(hidden) == 0 && withMask(hidden, 0) == hidden, "hidden data reused without allocation");
         check(mask(withMask(hidden, FULL)) == FULL, "reused hidden data becomes visible again");
+        ModelData top = withFullTop(ModelData.EMPTY, true);
+        check(fullTop(top), "top exposure recorded");
+        check(allowsFluff(top, false, true), "air/snow top overrides Cull Leaves enclosure");
+        check(allowsFluff(top, false, false), "air/snow top remains visible");
+        check(!allowsFluff(top, true, false) && !allowsFluff(top, true, true),
+            "Sodium aggressive suppression retains priority over full top");
+        ModelData covered = withFullTop(top, false);
+        check(!fullTop(covered) && !allowsFluff(covered, false, true), "covered top clears stale exemption");
+        check(!allowsFluff(covered, true, false) && allowsFluff(covered, false, false), "covered top follows normal gates");
         System.out.println("Fluff visibility: " + checks + " checks passed");
     }
 

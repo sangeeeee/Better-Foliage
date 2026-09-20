@@ -9,6 +9,7 @@
     "EclipticLeafContextMixin",
     "EclipticLeafModelMixin",
     "SodiumBlockRendererMixin",
+    "SodiumLeafTopAlphaMixin",
     "SodiumChunkVertexConsumerMixin"
   ],
   "injectors": {
