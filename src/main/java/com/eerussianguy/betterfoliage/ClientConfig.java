@@ -22,6 +22,13 @@ public class ClientConfig
     public final ModConfigSpec.DoubleValue waterPetalPopulation;
 
     public final ModConfigSpec.BooleanValue forceForgeLighting;
+    public final ModConfigSpec.BooleanValue snowPaletteEnabled;
+    public final ModConfigSpec.IntValue snowPaletteStep;
+    public final ModConfigSpec.IntValue snowPaletteMaxColors;
+    public final ModConfigSpec.IntValue snowPaletteMaxError;
+    public final ModConfigSpec.IntValue snowAtlasBudget;
+    public final ModConfigSpec.IntValue snowDiskBudget;
+    public final ModConfigSpec.ConfigValue<String> snowExtraColors;
 
     ClientConfig(ModConfigSpec.Builder innerBuilder)
     {
@@ -39,6 +46,23 @@ public class ClientConfig
         forceForgeLighting = builder.apply("forceForgeLighting").comment("Force Forge Lighting Pipeline? (should be true when not using Optifine)").define("forceForgeLighting", true);
         extraGrassRarity = builder.apply("extraGrassRarity").comment("Inverse of the rarity of the extra grass. Increase the value to make it less common.").defineInRange("extraGrassRarity", 2, 1, Integer.MAX_VALUE);
 
+        innerBuilder.pop();
+
+        innerBuilder.push("snowPalette");
+        snowPaletteEnabled = innerBuilder.comment("Single-layer tinted snowy fluff using a finite palette. Reload resources after changing these settings.")
+            .define("enabled", true);
+        snowPaletteStep = innerBuilder.comment("RGB quantization step for active foliage colormaps. Smaller is finer but uses more atlas space; 8 has at most 4/255 rounding error per sampled channel.")
+            .defineInRange("colorStep", 8, 2, 32);
+        snowPaletteMaxColors = innerBuilder.comment("Maximum palette entries including white and vanilla fixed leaf colors.")
+            .defineInRange("maxColors", 1024, 16, 4096);
+        snowPaletteMaxError = innerBuilder.comment("Fall back to layered snow if any actual RGB channel differs by more than this from the selected palette color.")
+            .defineInRange("maxChannelError", 8, 0, 32);
+        snowAtlasBudget = innerBuilder.comment("Budget in MiB for added snow sprites, including mipmaps (atlas packing overhead is additional). Over-budget textures keep layered snow.")
+            .defineInRange("atlasBudgetMiB", 128, 8, 1024);
+        snowDiskBudget = innerBuilder.comment("Maximum total size of BF's compressed .bfs cache files; oldest files are evicted after reload.")
+            .defineInRange("diskBudgetMiB", 512, 16, 4096);
+        snowExtraColors = innerBuilder.comment("Optional exact seasonal/mod RGB colors, comma-separated hex, e.g. FF8800,AA3377. Unrepresented colors otherwise fall back safely.")
+            .define("extraColors", "");
         innerBuilder.pop();
 
         innerBuilder.push("reed");

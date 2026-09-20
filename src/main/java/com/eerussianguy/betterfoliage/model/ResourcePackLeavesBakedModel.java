@@ -52,6 +52,8 @@ public final class ResourcePackLeavesBakedModel extends BakedModelWrapper<BakedM
     /** A model may choose several bushy textures through a weighted blockstate, so build each texture lazily. */
     private final ConcurrentMap<FluffKey, BakedModel[]> fluffModels = new ConcurrentHashMap<>();
     private final SnowyLeavesOverlay snowOverlay;
+    private final Function<ResourceLocation, TextureAtlasSprite> compositeGetter;
+    private final ConcurrentMap<ResourceLocation, SnowCompositeSprites.SpriteSet> compositeSprites = new ConcurrentHashMap<>();
 
     public ResourcePackLeavesBakedModel(
         BakedModel originalModel,
@@ -59,6 +61,7 @@ public final class ResourcePackLeavesBakedModel extends BakedModelWrapper<BakedM
     )
     {
         super(originalModel);
+        this.compositeGetter = texture -> spriteGetter.apply(new Material(TextureAtlas.LOCATION_BLOCKS, texture));
         this.snowOverlay = SnowyLeavesOverlay.get(
             texture -> spriteGetter.apply(new Material(TextureAtlas.LOCATION_BLOCKS, texture)),
             true
@@ -93,12 +96,15 @@ public final class ResourcePackLeavesBakedModel extends BakedModelWrapper<BakedM
         ArrayList<BakedQuad> result = null;
         TextureAtlasSprite fluffSprite = null;
         int fluffTintIndex = -1;
+        boolean anyTintedFluff = false;
+        boolean consistentTint = true;
 
         for (int index = 0; index < originalQuads.size(); index++)
         {
             final BakedQuad quad = originalQuads.get(index);
             if (isBushyQuad(quad))
             {
+                anyTintedFluff |= quad.isTinted();
                 if (result == null)
                 {
                     result = new ArrayList<>(originalQuads.size());
@@ -109,6 +115,7 @@ public final class ResourcePackLeavesBakedModel extends BakedModelWrapper<BakedM
                     fluffSprite = quad.getSprite();
                     fluffTintIndex = quad.getTintIndex();
                 }
+                else if (fluffTintIndex != quad.getTintIndex()) consistentTint = false;
             }
             else if (result != null)
             {
@@ -133,10 +140,19 @@ public final class ResourcePackLeavesBakedModel extends BakedModelWrapper<BakedM
             final BakedModel[] crosses = fluffModels.computeIfAbsent(key, this::buildCrosses);
             final List<BakedQuad> crossQuads = crosses[variation.get()].getQuads(state, side, random, data, renderType);
             final float rotation = variation.rotationOffset() * LeavesBakedModel.MAX_ROTATION_VARIATION;
-            final List<BakedQuad> snowQuads = SnowyLeavesData.isSnowy(data)
+            final boolean snowy = SnowyLeavesData.isSnowy(data);
+            TextureAtlasSprite composite = null;
+            if (snowy && consistentTint)
+            {
+                final SnowCompositeSprites.SpriteSet sprites = compositeSprites.computeIfAbsent(fluffSprite.contents().name(),
+                    name -> SnowCompositeSprites.findSet(name, compositeGetter));
+                if (!anyTintedFluff && sprites.untinted.length == 3) composite = sprites.untinted[variation.snowTexture()];
+                else if (fluffTintIndex == 0) composite = sprites.select(SnowTintData.color(data), variation.snowTexture());
+            }
+            final List<BakedQuad> snowQuads = snowy && composite == null
                 ? snowOverlay.getQuads(variation, state, side, random, data, renderType) : List.of();
             result.ensureCapacity(result.size() + crossQuads.size() + snowQuads.size());
-            LeavesBakedModel.appendPositionRotation(result, crossQuads, snowQuads, rotation);
+            LeavesBakedModel.appendPositionRotation(result, crossQuads, snowQuads, rotation, composite);
         }
         return result;
     }
@@ -151,7 +167,8 @@ public final class ResourcePackLeavesBakedModel extends BakedModelWrapper<BakedM
     )
     {
         final ModelData culled = CullLeavesCompat.append(level, pos, state, originalModel.getModelData(level, pos, state, data));
-        return CullLeavesCompat.shouldSuppressFluff(culled) ? culled : SnowyLeavesData.append(level, pos, state, culled);
+        return CullLeavesCompat.shouldSuppressFluff(culled) ? culled
+            : SnowTintData.append(level, pos, state, SnowyLeavesData.append(level, pos, state, culled));
     }
 
     private static boolean isBushyQuad(BakedQuad quad)

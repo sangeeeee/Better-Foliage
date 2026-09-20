@@ -23,7 +23,7 @@ Most elements of this mod can be disabled via Resource Packs.
 - **Cull Leaves (4.1.1):** keeps its original leaf-cube face culling, but renders BF fluff as a complete, independently culled cross. While Cull Leaves culling is enabled, fluff is hidden only when all six adjacent positions contain non-air blocks (including water and non-solid blocks). Snowy fluff and supported resource-pack bushy models follow the same rule. No Cull Leaves runtime dependency is required. If Sodium Leaf Culling is also enabled, its existing suppression rules still apply independently.
 - **Sodium / Iris:** includes optional rendering bridges for the additional vegetation geometry and shader material handling. Shader waving still requires a shader pack that supports the relevant vegetation category.
 - **Stay True and supported bushy-leaf resource-pack models:** reuses the pack's bushy textures while letting Better Foliage control fluff placement, rotation, and leaf-culling compatibility. This is not a guarantee of support for every custom model format.
-- **Resource reloads:** generated snowy fluff follows the currently loaded textures; reloading resources rebuilds the generated variants.
+- **Resource reloads:** generated snowy fluff follows the currently loaded textures; reloading resources reuses validated disk caches or rebuilds changed variants.
 - **Oh The Biomes We've Gone:** white and yellow sakura leaves also support floating petals in their corresponding colors.
 
 These integrations are optional. The mod can run without the corresponding mods or resource packs installed.
@@ -49,6 +49,36 @@ Existing compatibility resources are also retained for Atmospheric, Bayou Blues,
 All these compatibility assets are included directly in the mod JAR. No separate Better Foliage Addons resource pack is needed. Supplemental models use isolated `betterfoliage_*` namespaces to preserve the existing compatibility resources.
 
 ## Configuration
+
+### Single-layer snowy fluff
+
+Untinted fluff receives three automatically composited snow textures during block-atlas loading. Tinted fluff receives a finite palette of precolored composites: only the leaves are colored, then the original snow pixels are applied. Snowy blocks reuse their ordinary fluff geometry with the selected composite UVs and no second tint pass, instead of drawing a second snow layer. Normal fluff geometry, coordinate-based variation and culling rules are unchanged.
+
+Tinting is determined from model data, not whether the image looks gray: BF uses `tintLeaves`; supported resource-pack bushy faces use their actual tint indices. This includes Stay True's tinted oak-style bushy models and untinted birch-style models. Vanilla model inheritance, texture aliases and base animation frames are preserved.
+
+The palette samples the **active** foliage/leaves colormaps in `textures/colormap` (including mod namespaces), adds white and vanilla fixed species colors, and optionally accepts extra RGB colors. During mesh construction the real block color callback (tint index 0) selects a close palette entry using a precomputed lookup. No image processing, disk access, world-wide scanning or per-position image cache is needed during rendering. The original two-layer effect remains the fallback for unrepresented seasonal/mod colors, unsupported tint indices, missing/custom assets, independently animated snow overlays and over-budget textures. Arbitrary mod color callbacks cannot be exhaustively enumerated in advance.
+
+Client configuration section `[snowPalette]` (reload resources after changing):
+
+| Setting | Default | Meaning |
+| --- | --- | --- |
+| `enabled` | `true` | Enable finite-palette single-layer rendering for tinted fluff |
+| `colorStep` | `8` | RGB sampling interval; smaller values generate a finer, larger palette |
+| `maxColors` | `1024` | Maximum palette entries, including fixed colors |
+| `maxChannelError` | `8` | Maximum allowed difference from the actual block tint in any 0–255 RGB channel; otherwise retain two layers |
+| `atlasBudgetMiB` | `128` | Budget for added image pixels including estimated mipmaps; atlas packing overhead is additional |
+| `diskBudgetMiB` | `512` | Total compressed cache budget; oldest BF bundles are evicted after reload |
+| `extraColors` | `""` | Optional exact RGB colors, e.g. `"FF8800,AA3377"`, for known seasonal/mod tints |
+
+The default sampling interval has at most 4/255 rounding error per sampled channel; actual palette selection is separately bounded by `maxChannelError`. This is an approximation of each block's tint, not an exact reproduction of every renderer's per-vertex biome blending. A smaller interval increases texture count and may make more textures hit the atlas budget and use the layered fallback. Untinted composites get budget priority, and additional atlas-size headroom is reserved.
+
+### Persistent snow texture cache
+
+Generated pixels are stored in `<game directory>/.cache/better-foliage/`. Each source fluff texture has one hashed `.bfs` file containing **all generated palette colors and three snow variants**, not hundreds of separate PNGs. The format is a versioned GZIP-compressed binary pixel bundle, indexed by palette entry and snow variant; current animation metadata is reapplied when loading it. Its contents are lossless even though palette selection is approximate.
+
+Source pixel data, frame dimensions, palette colors and format version are fingerprinted. On reload, unchanged bundles are reused; changed resources or corrupt/truncated caches are rebuilt and atomically replaced. Read/write failures do not disable snowy fluff. Unused older bundles may remain until budget eviction. It is safe to remove this generated cache while the game is closed; the next load recreates it. No resource-pack files are modified.
+
+Disk compression saves storage and repeated composition work, **not VRAM**: validated textures still have to be decoded, stitched and uploaded to the block atlas. The atlas owns the in-memory sprites and releases/replaces them with the normal resource lifecycle.
 
 Many inherited visual features can still be customized through resource packs. Client configuration controls additional effects such as reed density. Compatibility models using the `betterfoliage:grass` loader can opt custom dirt blocks into reed rendering with `"renderReed": true`.
 

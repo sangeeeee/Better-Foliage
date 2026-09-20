@@ -42,6 +42,7 @@ public class LeavesBakedModel extends BFBakedModel
     private final BakedModel[] crosses;
     private final SnowyLeavesOverlay snowOverlay;
     private final boolean unculledFluff;
+    private final SnowCompositeSprites.SpriteSet snowyFluff;
 
     private final BakedModel core;
     @Nullable private final BakedModel outerCore;
@@ -54,6 +55,7 @@ public class LeavesBakedModel extends BFBakedModel
         this.tintLeaves = tintLeaves;
         this.leavesTex = spriteGetter.apply(leaves);
         this.fluffTex = spriteGetter.apply(fluff);
+        this.snowyFluff = SnowCompositeSprites.findSet(fluff, spriteGetter);
         this.crosses = new BakedModel[(int) Math.pow(BFConfig.CLIENT.leavesCacheSize.get(), 3)];
         this.unculledFluff = CullLeavesCompat.usesIndependentFluff();
         this.snowOverlay = SnowyLeavesOverlay.get(spriteGetter, unculledFluff);
@@ -142,6 +144,7 @@ public class LeavesBakedModel extends BFBakedModel
         List<BakedQuad> crossQuads = List.of();
         List<BakedQuad> snowQuads = List.of();
         float rotation = 0;
+        TextureAtlasSprite composite = null;
         final boolean fluffBucket = unculledFluff ? side == null : side == Direction.NORTH || side == Direction.SOUTH;
         if (fluffBucket && !SodiumLeafCullingCompat.shouldSuppressFluff() && !CullLeavesCompat.shouldSuppressFluff(extraData))
         {
@@ -150,7 +153,9 @@ public class LeavesBakedModel extends BFBakedModel
             rotation = variation.rotationOffset() * MAX_ROTATION_VARIATION;
             if (SnowyLeavesData.isSnowy(extraData))
             {
-                snowQuads = snowOverlay.getQuads(variation, state, side, rand, extraData, renderType);
+                if (tintLeaves) composite = snowyFluff.select(SnowTintData.color(extraData), variation.snowTexture());
+                else if (snowyFluff.untinted.length == 3) composite = snowyFluff.untinted[variation.snowTexture()];
+                if (composite == null) snowQuads = snowOverlay.getQuads(variation, state, side, rand, extraData, renderType);
             }
         }
         final List<BakedQuad> outQuads = isOverlay
@@ -159,7 +164,7 @@ public class LeavesBakedModel extends BFBakedModel
         final List<BakedQuad> result = new ArrayList<>(coreQuads.size() + crossQuads.size() + snowQuads.size() + outQuads.size());
         // Avoid Collection.toArray() temporaries from addAll on the hot mesh-building path.
         for (BakedQuad quad : coreQuads) result.add(quad);
-        appendPositionRotation(result, crossQuads, snowQuads, rotation);
+        appendPositionRotation(result, crossQuads, snowQuads, rotation, composite);
         for (BakedQuad quad : outQuads) result.add(quad);
         return result;
     }
@@ -175,7 +180,9 @@ public class LeavesBakedModel extends BFBakedModel
     {
         final ModelData culled = CullLeavesCompat.append(level, pos, state, data);
         // Hidden fluff cannot display snow. Visible leaves always recompute snow, including reused ModelData.
-        return CullLeavesCompat.shouldSuppressFluff(culled) ? culled : SnowyLeavesData.append(level, pos, state, culled);
+        if (CullLeavesCompat.shouldSuppressFluff(culled)) return culled;
+        final ModelData snowy = SnowyLeavesData.append(level, pos, state, culled);
+        return tintLeaves ? SnowTintData.append(level, pos, state, snowy) : snowy;
     }
 
     private void assembleFluffFaces(SimpleBakedModel.Builder builder, BlockElement part)
@@ -205,16 +212,23 @@ public class LeavesBakedModel extends BFBakedModel
     static void appendPositionRotation(List<BakedQuad> result, List<BakedQuad> source,
         List<BakedQuad> snow, float rotationDegrees)
     {
+        appendPositionRotation(result, source, snow, rotationDegrees, null);
+    }
+
+    static void appendPositionRotation(List<BakedQuad> result, List<BakedQuad> source,
+        List<BakedQuad> snow, float rotationDegrees, @Nullable TextureAtlasSprite composite)
+    {
         if (source.isEmpty() && snow.isEmpty()) return;
 
         final double radians = Math.toRadians(rotationDegrees);
         final float sin = (float) Math.sin(radians);
         final float cos = (float) Math.cos(radians);
-        appendRotatedQuads(result, source, sin, cos);
-        appendRotatedQuads(result, snow, sin, cos);
+        appendRotatedQuads(result, source, sin, cos, composite);
+        appendRotatedQuads(result, snow, sin, cos, null);
     }
 
-    private static void appendRotatedQuads(List<BakedQuad> result, List<BakedQuad> source, float sin, float cos)
+    private static void appendRotatedQuads(List<BakedQuad> result, List<BakedQuad> source, float sin, float cos,
+        @Nullable TextureAtlasSprite composite)
     {
         for (BakedQuad quad : source)
         {
@@ -242,6 +256,13 @@ public class LeavesBakedModel extends BFBakedModel
                 final float z = Float.intBitsToFloat(vertices[offset + 2]) - centreZ;
                 vertices[offset] = Float.floatToRawIntBits(centreX + cos * x + sin * z);
                 vertices[offset + 2] = Float.floatToRawIntBits(centreZ - sin * x + cos * z);
+
+                if (composite != null)
+                {
+                    final int uv = vertex * IQuadTransformer.STRIDE + IQuadTransformer.UV0;
+                    vertices[uv] = Float.floatToRawIntBits(composite.getU(quad.getSprite().getUOffset(Float.intBitsToFloat(vertices[uv]))));
+                    vertices[uv + 1] = Float.floatToRawIntBits(composite.getV(quad.getSprite().getVOffset(Float.intBitsToFloat(vertices[uv + 1]))));
+                }
 
                 final int normalOffset = vertex * IQuadTransformer.STRIDE + IQuadTransformer.NORMAL;
                 final int packedNormal = vertices[normalOffset];
@@ -271,9 +292,9 @@ public class LeavesBakedModel extends BFBakedModel
 
             result.add(new BakedQuad(
                 vertices,
-                quad.getTintIndex(),
+                composite != null ? -1 : quad.getTintIndex(),
                 direction,
-                quad.getSprite(),
+                composite != null ? composite : quad.getSprite(),
                 quad.isShade(),
                 quad.hasAmbientOcclusion()
             ));

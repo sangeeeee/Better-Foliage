@@ -68,6 +68,17 @@ sourceSets {
 }
 
 dependencies {
+    // NativeImage regression tests need native memory allocation, but no window or OpenGL context.
+    val testOs = providers.systemProperty("os.name").get().lowercase()
+    val testArch = providers.systemProperty("os.arch").get().lowercase()
+    val testNativePlatform = when {
+        testOs.contains("win") -> "windows"
+        testOs.contains("mac") -> "macos"
+        else -> "linux"
+    }
+    val testNativeArch = if (testArch == "aarch64" || testArch == "arm64") "-arm64" else ""
+    testRuntimeOnly("org.lwjgl:lwjgl:3.3.3:natives-$testNativePlatform$testNativeArch")
+    testRuntimeOnly("org.lwjgl:lwjgl-stb:3.3.3:natives-$testNativePlatform$testNativeArch")
     // Ecliptic Seasons 1.21.1 / 0.15.0-rc-3. Optional client bridge; never bundled or added to runtime.
     compileOnly("maven.modrinth:ecliptic-seasons:Tok0V0sp") { isTransitive = false }
     // Cull Leaves 4.1.1 / NeoForge 1.21–1.21.1. Compile-time only; no runtime dependency or bundling.
@@ -110,6 +121,15 @@ val fluffRotationTest = tasks.register<JavaExec>("fluffRotationTest") {
     mainClass.set("com.eerussianguy.betterfoliage.model.FluffRotationTest")
 }
 tasks.named("check") { dependsOn(fluffRotationTest) }
+val snowCompositeTest = tasks.register<JavaExec>("snowCompositeTest") {
+    dependsOn(tasks.named("testClasses"))
+    classpath = sourceSets["test"].runtimeClasspath
+    mainClass.set("com.eerussianguy.betterfoliage.model.SnowCompositeTest")
+    workingDir(layout.buildDirectory.dir("snowCompositeTest").get().asFile)
+    doFirst { workingDir.mkdirs() }
+    providers.gradleProperty("snowTestPack").orNull?.let { args(it) }
+}
+tasks.named("check") { dependsOn(snowCompositeTest) }
 
 tasks {
     processResources {
