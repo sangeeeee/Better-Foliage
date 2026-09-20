@@ -6,6 +6,8 @@
   "client": [
     "LevelRendererMixin",
     "SnowCompositeSpriteLoaderMixin",
+    "EclipticLeafContextMixin",
+    "EclipticLeafModelMixin",
     "SodiumBlockRendererMixin",
     "SodiumChunkVertexConsumerMixin"
   ],

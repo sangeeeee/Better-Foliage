@@ -18,6 +18,8 @@ public final class EclipticSeasonsCompat
     {
     }
 
+    public static boolean isAvailable() { return LOADED && !incompatible; }
+
     public static boolean isSnowy(BlockAndTintGetter view, BlockPos pos, BlockState state)
     {
         if (!LOADED || incompatible)

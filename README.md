@@ -66,6 +66,8 @@ Client configuration section `[snowPalette]` (reload resources after changing):
 | `colorStep` | `8` | RGB sampling interval; smaller values generate a finer, larger palette |
 | `maxColors` | `1024` | Maximum palette entries, including fixed colors |
 | `atlasBudgetMiB` | `128` | Budget for added image pixels including estimated mipmaps; atlas packing overhead is additional |
+| `eclipticLeaves` | `true` | Merge supported Ecliptic Seasons leaf-cube snow faces as well as BF fluff |
+| `eclipticAtlasBudgetMiB` | `64` | Separate added-image budget for ES leaf-cube composites; estimated mipmaps included |
 | `diskBudgetMiB` | `512` | Total compressed cache budget; oldest BF bundles are evicted after reload |
 | `extraColors` | `""` | Optional exact RGB colors, e.g. `"FF8800,AA3377"`, for known seasonal/mod tints |
 
@@ -78,6 +80,16 @@ Generated pixels are stored in `<game directory>/.cache/better-foliage/`. Each s
 Source pixel data, frame dimensions, palette colors and format version are fingerprinted. On reload, unchanged bundles are reused; changed resources or corrupt/truncated caches are rebuilt and atomically replaced. Read/write failures do not disable snowy fluff. Unused older bundles may remain until budget eviction. It is safe to remove this generated cache while the game is closed; the next load recreates it. No resource-pack files are modified.
 
 Disk compression saves storage and repeated composition work, **not VRAM**: validated textures still have to be decoded, stitched and uploaded to the block atlas. The atlas owns the in-memory sprites and releases/replaces them with the normal resource lifecycle.
+
+### Ecliptic Seasons leaf-cube snow merging
+
+The optional bridge targets the Ecliptic Seasons **0.15.0-rc-3** rendering API. In addition to BF's own snowy fluff, it precomposes ES' standard `snow_overlay_leaves`, `snow_overlay_leaves_top` and `snow_spot_overlay_leaves` masks with the active leaf-cube textures. Untinted textures get plain composites; tint-index-0 textures get the same finite-palette treatment as fluff, always approximating nearby colors rather than falling back because of color error. A fully opaque `minecraft:block/snow` face reuses the existing snow sprite directly, without generating redundant colored copies.
+
+Only textures reachable from **registered leaf blockstates** are considered (including weighted variants and inherited resource-pack models). Leaf-cube bundles live in the same `.cache/better-foliage` directory, with separate keys from fluff bundles and the same content validation, atomic replacement and shared disk quota. The separate 64 MiB image budget avoids consuming fluff's budget; overall atlas-size headroom is still checked.
+
+The bridge hooks ES' shared `cancelTop` path used by vanilla and Sodium. It preserves ES' snow decisions, selected snow model and neighbor snow-face culling. It replaces an eligible original cube face with its composite and only then suppresses the matching ES overlay face. Per-render context bookkeeping is reset between blocks, and the additional tint lookup is cached for the current block only. No per-frame image processing or position-to-texture cache is added.
+
+Merging is deliberately limited to standard ES leaf overlays (leaf type 4), one full cube face per direction, untinted/index-0 faces, white vertex colors, and matching full-face UV layouts. Fruit/multi-layer faces, custom/cropped/rotated UVs, non-cube geometry, custom ES replacement models, unsupported masks or tint indices, and missing/over-budget composites retain ES' original rendering. This does not remove the separate extra snow-thickness effect, change snow coverage, replace BF fluff geometry or override leaf-culling mods. ES remains compile-only and is not required at runtime. These safeguards mean not every snowy leaf face necessarily becomes single-layer.
 
 Many inherited visual features can still be customized through resource packs. Client configuration controls additional effects such as reed density. Compatibility models using the `betterfoliage:grass` loader can opt custom dirt blocks into reed rendering with `"renderReed": true`.
 

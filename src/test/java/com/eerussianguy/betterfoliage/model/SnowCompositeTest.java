@@ -49,6 +49,7 @@ public final class SnowCompositeTest
         imageAndUvTests();
         reloadTests();
         SnowPaletteCacheTest.run();
+        EclipticLeafTest.run();
         if (args.length > 0) resourcePackTests(java.nio.file.Path.of(args[0]));
         System.out.println("Snow composites: " + checks + " checks passed");
     }
@@ -80,6 +81,9 @@ public final class SnowCompositeTest
         check(tinted.contains(id("minecraft:block/oak_leaves_bushy1")), "real Stay True alternate oak tinted");
         check(untinted.contains(id("minecraft:block/birch_leaves_bushy")), "real Stay True birch untinted");
         check(!tinted.contains(id("minecraft:block/birch_leaves_bushy")), "real Stay True birch not accidentally recolored");
+        var cores = EclipticLeafSprites.candidates(models, Set.of(id("minecraft:block/oak_leaves"), id("minecraft:block/birch_leaves")));
+        check(cores.equals(Map.of(id("minecraft:block/oak_leaves"), true, id("minecraft:block/birch_leaves"), false)),
+            "actual Stay True core leaf tint classification excludes bushy geometry");
         System.out.println("Stay True pack: " + tinted.size() + " tinted bushy textures, " + untinted.size() + " untinted bushy textures recognized");
         var manager = SnowPaletteCacheTest.manager(Map.of(id("minecraft:textures/colormap/foliage.png"),
             new net.minecraft.server.packs.resources.Resource(null, () -> new java.io.ByteArrayInputStream(foliageMap))));

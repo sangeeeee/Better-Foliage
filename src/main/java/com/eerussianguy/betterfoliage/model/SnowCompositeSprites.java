@@ -95,9 +95,15 @@ public final class SnowCompositeSprites
         final boolean paletteEnabled = resources != null && mc != null && config.snowPaletteEnabled.get();
         final SnowPalette palette = paletteEnabled ? SnowPalette.load(resources, config.snowPaletteStep.get(),
             config.snowPaletteMaxColors.get(), config.snowExtraColors.get()) : null;
-        return generate(original, resources, palette, cacheDirectory,
+        List<SpriteContents> fluff = generate(original, resources, palette, cacheDirectory,
             (mc == null ? 128L : config.snowAtlasBudget.get()) * 1024 * 1024,
             (mc == null ? 512L : config.snowDiskBudget.get()) * 1024 * 1024, maxTextureSize);
+        EclipticLeafSprites.reset();
+        if (mc == null || resources == null || !config.eclipticSnowLeaves.get()
+            || !com.eerussianguy.betterfoliage.compat.EclipticSeasonsCompat.isAvailable()) return fluff;
+        return EclipticLeafSprites.generate(fluff, resources, palette, cacheDirectory,
+            config.eclipticSnowAtlasBudget.get() * 1024L * 1024, config.snowDiskBudget.get() * 1024L * 1024,
+            maxTextureSize, EclipticLeafSprites.activeLeafModels(resources));
     }
 
     static List<SpriteContents> generate(List<SpriteContents> original, ResourceManager resources,
@@ -186,7 +192,7 @@ public final class SnowCompositeSprites
         return result;
     }
 
-    private static SnowTextureCache.ImageSpec spec(SpriteContents base, SpriteContents snow, ResourceLocation name)
+    static SnowTextureCache.ImageSpec spec(SpriteContents base, SpriteContents snow, ResourceLocation name)
     {
         int width = Math.max(base.width(), snow.width()), height = Math.max(base.height(), snow.height());
         int columns = base.getOriginalImage().getWidth() / base.width(), rows = base.getOriginalImage().getHeight() / base.height();
@@ -238,7 +244,7 @@ public final class SnowCompositeSprites
         return !face.has("tintindex") || face.get("tintindex").getAsInt() == -1;
     }
 
-    private static Map<ResourceLocation, JsonObject> readModels(ResourceManager resources)
+    static Map<ResourceLocation, JsonObject> readModels(ResourceManager resources)
     {
         Map<ResourceLocation, JsonObject> models = new HashMap<>();
         resources.listResources("models", path -> path.getPath().endsWith(".json")).forEach((path, resource) -> {

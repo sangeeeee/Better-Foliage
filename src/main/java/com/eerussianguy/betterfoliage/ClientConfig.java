@@ -27,6 +27,8 @@ public class ClientConfig
     public final ModConfigSpec.IntValue snowPaletteMaxColors;
     public final ModConfigSpec.IntValue snowAtlasBudget;
     public final ModConfigSpec.IntValue snowDiskBudget;
+    public final ModConfigSpec.BooleanValue eclipticSnowLeaves;
+    public final ModConfigSpec.IntValue eclipticSnowAtlasBudget;
     public final ModConfigSpec.ConfigValue<String> snowExtraColors;
 
     ClientConfig(ModConfigSpec.Builder innerBuilder)
@@ -58,6 +60,10 @@ public class ClientConfig
             .defineInRange("atlasBudgetMiB", 128, 8, 1024);
         snowDiskBudget = innerBuilder.comment("Maximum total size of BF's compressed .bfs cache files; oldest files are evicted after reload.")
             .defineInRange("diskBudgetMiB", 512, 16, 4096);
+        eclipticSnowLeaves = innerBuilder.comment("Merge Ecliptic Seasons' standard leaf-cube snow overlays into single-layer faces. Reload resources after changing.")
+            .define("eclipticLeaves", true);
+        eclipticSnowAtlasBudget = innerBuilder.comment("Separate added-image budget in MiB for Ecliptic Seasons leaf-cube composites, including estimated mipmaps.")
+            .defineInRange("eclipticAtlasBudgetMiB", 64, 8, 1024);
         snowExtraColors = innerBuilder.comment("Optional exact seasonal/mod RGB colors, comma-separated hex, e.g. FF8800,AA3377. Unrepresented colors use a nearby palette color, without a color-error fallback.")
             .define("extraColors", "");
         innerBuilder.pop();
