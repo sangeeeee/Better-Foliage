@@ -55,6 +55,11 @@ repositories {
 }
 
 sourceSets {
+    test {
+        // ModDev exposes the mapped game API to main only; the headless geometry regression needs it too.
+        compileClasspath += sourceSets.main.get().compileClasspath
+        runtimeClasspath += sourceSets.main.get().compileClasspath
+    }
     main {
         resources {
             srcDir(generateModMetadata)
@@ -98,6 +103,13 @@ neoForge {
 
     ideSyncTask(generateModMetadata)
 }
+
+val fluffRotationTest = tasks.register<JavaExec>("fluffRotationTest") {
+    dependsOn(tasks.named("testClasses"))
+    classpath = sourceSets["test"].runtimeClasspath
+    mainClass.set("com.eerussianguy.betterfoliage.model.FluffRotationTest")
+}
+tasks.named("check") { dependsOn(fluffRotationTest) }
 
 tasks {
     processResources {

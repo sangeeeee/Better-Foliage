@@ -102,7 +102,7 @@ public final class ResourcePackLeavesBakedModel extends BakedModelWrapper<BakedM
                 if (result == null)
                 {
                     result = new ArrayList<>(originalQuads.size());
-                    result.addAll(originalQuads.subList(0, index));
+                    for (int before = 0; before < index; before++) result.add(originalQuads.get(before));
                 }
                 if (fluffSprite == null)
                 {
@@ -133,17 +133,10 @@ public final class ResourcePackLeavesBakedModel extends BakedModelWrapper<BakedM
             final BakedModel[] crosses = fluffModels.computeIfAbsent(key, this::buildCrosses);
             final List<BakedQuad> crossQuads = crosses[variation.get()].getQuads(state, side, random, data, renderType);
             final float rotation = variation.rotationOffset() * LeavesBakedModel.MAX_ROTATION_VARIATION;
-            result.addAll(LeavesBakedModel.applyPositionRotation(
-                crossQuads,
-                rotation
-            ));
-            if (SnowyLeavesData.isSnowy(data))
-            {
-                result.addAll(LeavesBakedModel.applyPositionRotation(
-                    snowOverlay.getQuads(variation, state, side, random, data, renderType),
-                    rotation
-                ));
-            }
+            final List<BakedQuad> snowQuads = SnowyLeavesData.isSnowy(data)
+                ? snowOverlay.getQuads(variation, state, side, random, data, renderType) : List.of();
+            result.ensureCapacity(result.size() + crossQuads.size() + snowQuads.size());
+            LeavesBakedModel.appendPositionRotation(result, crossQuads, snowQuads, rotation);
         }
         return result;
     }
@@ -157,8 +150,8 @@ public final class ResourcePackLeavesBakedModel extends BakedModelWrapper<BakedM
         @NotNull ModelData data
     )
     {
-        return CullLeavesCompat.append(level, pos, state,
-            SnowyLeavesData.append(level, pos, state, originalModel.getModelData(level, pos, state, data)));
+        final ModelData culled = CullLeavesCompat.append(level, pos, state, originalModel.getModelData(level, pos, state, data));
+        return CullLeavesCompat.shouldSuppressFluff(culled) ? culled : SnowyLeavesData.append(level, pos, state, culled);
     }
 
     private static boolean isBushyQuad(BakedQuad quad)

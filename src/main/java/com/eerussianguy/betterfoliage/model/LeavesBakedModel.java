@@ -41,6 +41,7 @@ public class LeavesBakedModel extends BFBakedModel
     private final BlockModel blockModel;
     private final BakedModel[] crosses;
     private final SnowyLeavesOverlay snowOverlay;
+    private final boolean unculledFluff;
 
     private final BakedModel core;
     @Nullable private final BakedModel outerCore;
@@ -54,7 +55,8 @@ public class LeavesBakedModel extends BFBakedModel
         this.leavesTex = spriteGetter.apply(leaves);
         this.fluffTex = spriteGetter.apply(fluff);
         this.crosses = new BakedModel[(int) Math.pow(BFConfig.CLIENT.leavesCacheSize.get(), 3)];
-        this.snowOverlay = SnowyLeavesOverlay.get(spriteGetter, CullLeavesCompat.usesIndependentFluff());
+        this.unculledFluff = CullLeavesCompat.usesIndependentFluff();
+        this.snowOverlay = SnowyLeavesOverlay.get(spriteGetter, unculledFluff);
         this.core = buildBlock(leavesTex, tintLeaves);
         this.outerCore = isOverlay ? buildBlock(spriteGetter.apply(overlay), tintOverlay) : null;
         buildCrosses();
@@ -131,34 +133,35 @@ public class LeavesBakedModel extends BFBakedModel
     @NotNull
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource rand, ModelData extraData, @Nullable RenderType renderType)
     {
-        // RandomSource is the one position-dependent input guaranteed by both the legacy and ModelData-aware baked
-        // model paths. Resolve our variation before delegating to child models so wrappers cannot collapse it to ZERO.
-        final LeavesOrdinalData data = state == null ? null : LeavesOrdinalData.fromRenderRandom(rand);
-        List<BakedQuad> coreQuads = core.getQuads(state, side, rand, extraData, renderType);
-        if (data != null)
+        // Preserve the exact random-stream advancement, even on the no-fluff fast path. Only postpone
+        // decoding the seed: weighted wrappers and later consumers must see the same stream as before.
+        final long seed = state == null ? 0L : rand.nextLong();
+        final List<BakedQuad> coreQuads = core.getQuads(state, side, rand, extraData, renderType);
+        if (state == null) return coreQuads;
+
+        List<BakedQuad> crossQuads = List.of();
+        List<BakedQuad> snowQuads = List.of();
+        float rotation = 0;
+        final boolean fluffBucket = unculledFluff ? side == null : side == Direction.NORTH || side == Direction.SOUTH;
+        if (fluffBucket && !SodiumLeafCullingCompat.shouldSuppressFluff() && !CullLeavesCompat.shouldSuppressFluff(extraData))
         {
-            List<BakedQuad> quads = new ArrayList<>(coreQuads);
-            if (!SodiumLeafCullingCompat.shouldSuppressFluff() && !CullLeavesCompat.shouldSuppressFluff(extraData))
+            final LeavesOrdinalData variation = LeavesOrdinalData.fromSeed(seed);
+            crossQuads = crosses[variation.get()].getQuads(state, side, rand, extraData, renderType);
+            rotation = variation.rotationOffset() * MAX_ROTATION_VARIATION;
+            if (SnowyLeavesData.isSnowy(extraData))
             {
-                List<BakedQuad> crossQuads = crosses[data.get()].getQuads(state, side, rand, extraData, renderType);
-                final float rotation = data.rotationOffset() * MAX_ROTATION_VARIATION;
-                quads.addAll(applyPositionRotation(crossQuads, rotation));
-                if (SnowyLeavesData.isSnowy(extraData))
-                {
-                    quads.addAll(applyPositionRotation(
-                        snowOverlay.getQuads(data, state, side, rand, extraData, renderType),
-                        rotation
-                    ));
-                }
+                snowQuads = snowOverlay.getQuads(variation, state, side, rand, extraData, renderType);
             }
-            if (isOverlay)
-            {
-                List<BakedQuad> outQuads = Objects.requireNonNull(outerCore).getQuads(state, side, rand, extraData, renderType);
-                quads.addAll(outQuads);
-            }
-            return quads;
         }
-        return coreQuads;
+        final List<BakedQuad> outQuads = isOverlay
+            ? Objects.requireNonNull(outerCore).getQuads(state, side, rand, extraData, renderType) : List.of();
+        if (crossQuads.isEmpty() && snowQuads.isEmpty() && outQuads.isEmpty()) return coreQuads;
+        final List<BakedQuad> result = new ArrayList<>(coreQuads.size() + crossQuads.size() + snowQuads.size() + outQuads.size());
+        // Avoid Collection.toArray() temporaries from addAll on the hot mesh-building path.
+        for (BakedQuad quad : coreQuads) result.add(quad);
+        appendPositionRotation(result, crossQuads, snowQuads, rotation);
+        for (BakedQuad quad : outQuads) result.add(quad);
+        return result;
     }
 
     @Override
@@ -170,12 +173,14 @@ public class LeavesBakedModel extends BFBakedModel
         @NotNull ModelData data
     )
     {
-        return CullLeavesCompat.append(level, pos, state, SnowyLeavesData.append(level, pos, state, data));
+        final ModelData culled = CullLeavesCompat.append(level, pos, state, data);
+        // Hidden fluff cannot display snow. Visible leaves always recompute snow, including reused ModelData.
+        return CullLeavesCompat.shouldSuppressFluff(culled) ? culled : SnowyLeavesData.append(level, pos, state, culled);
     }
 
     private void assembleFluffFaces(SimpleBakedModel.Builder builder, BlockElement part)
     {
-        if (!CullLeavesCompat.usesIndependentFluff())
+        if (!unculledFluff)
         {
             Helpers.assembleFaces(builder, part, fluffTex);
             return;
@@ -197,18 +202,20 @@ public class LeavesBakedModel extends BFBakedModel
      * Applies the coordinate PRNG's high-entropy, position-stable rotation without multiplying the baked-model
      * cache. Rotating around each quad's own centre preserves the fluff-centre offset exactly.
      */
-    static List<BakedQuad> applyPositionRotation(List<BakedQuad> source, float rotationDegrees)
+    static void appendPositionRotation(List<BakedQuad> result, List<BakedQuad> source,
+        List<BakedQuad> snow, float rotationDegrees)
     {
-        if (source.isEmpty())
-        {
-            return source;
-        }
+        if (source.isEmpty() && snow.isEmpty()) return;
 
         final double radians = Math.toRadians(rotationDegrees);
         final float sin = (float) Math.sin(radians);
         final float cos = (float) Math.cos(radians);
-        final List<BakedQuad> result = new ArrayList<>(source.size());
+        appendRotatedQuads(result, source, sin, cos);
+        appendRotatedQuads(result, snow, sin, cos);
+    }
 
+    private static void appendRotatedQuads(List<BakedQuad> result, List<BakedQuad> source, float sin, float cos)
+    {
         for (BakedQuad quad : source)
         {
             final int[] vertices = Arrays.copyOf(quad.getVertices(), quad.getVertices().length);
@@ -225,6 +232,9 @@ public class LeavesBakedModel extends BFBakedModel
             centreX *= 0.25F;
             centreZ *= 0.25F;
 
+            int previousNormal = 0;
+            int transformedNormal = 0;
+
             for (int vertex = 0; vertex < 4; vertex++)
             {
                 final int offset = vertex * IQuadTransformer.STRIDE + IQuadTransformer.POSITION;
@@ -237,12 +247,21 @@ public class LeavesBakedModel extends BFBakedModel
                 final int packedNormal = vertices[normalOffset];
                 if ((packedNormal & 0x00FFFFFF) != 0)
                 {
+                    // Planar quads normally have four identical normals. Keep the general fallback
+                    // for unequal normals, and never modify the shared baked source array.
+                    if (packedNormal == previousNormal)
+                    {
+                        vertices[normalOffset] = transformedNormal;
+                        continue;
+                    }
                     final float normalX = (byte) packedNormal / 127.0F;
                     final float normalY = (byte) (packedNormal >>> 8) / 127.0F;
                     final float normalZ = (byte) (packedNormal >>> 16) / 127.0F;
                     final float rotatedNormalX = cos * normalX + sin * normalZ;
                     final float rotatedNormalZ = -sin * normalX + cos * normalZ;
                     vertices[normalOffset] = packNormal(rotatedNormalX, normalY, rotatedNormalZ, packedNormal);
+                    previousNormal = packedNormal;
+                    transformedNormal = vertices[normalOffset];
                     if (vertex == 0)
                     {
                         direction = Direction.getNearest(rotatedNormalX, normalY, rotatedNormalZ);
@@ -259,7 +278,6 @@ public class LeavesBakedModel extends BFBakedModel
                 quad.hasAmbientOcclusion()
             ));
         }
-        return result;
     }
 
     private static int packNormal(float x, float y, float z, int original)

@@ -21,6 +21,11 @@ public final class LeavesOrdinalData
         return new LeavesOrdinalData(random.nextLong());
     }
 
+    static LeavesOrdinalData fromSeed(long seed)
+    {
+        return new LeavesOrdinalData(seed);
+    }
+
     private LeavesOrdinalData(long coordinateSeed)
     {
         final int cacheSize = BFConfig.CLIENT.leavesCacheSize.get();
