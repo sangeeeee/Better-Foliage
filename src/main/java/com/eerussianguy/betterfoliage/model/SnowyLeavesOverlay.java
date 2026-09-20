@@ -20,7 +20,6 @@ import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.BlockModelRotation;
 import net.minecraft.client.resources.model.SimpleBakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -44,7 +43,7 @@ final class SnowyLeavesOverlay
 
     private final BakedModel[][] models;
 
-    private SnowyLeavesOverlay(List<TextureAtlasSprite> sprites, boolean unculled)
+    private SnowyLeavesOverlay(List<TextureAtlasSprite> sprites)
     {
         final int cacheSize = BFConfig.CLIENT.leavesCacheSize.get();
         final int modelCount = cacheSize * cacheSize * cacheSize;
@@ -70,7 +69,7 @@ final class SnowyLeavesOverlay
                 {
                     for (int texture = 0; texture < TEXTURE_COUNT; texture++)
                     {
-                        models[texture][ordinal] = buildCross(blockModel, sprites.get(texture), x, y, z, unculled);
+                        models[texture][ordinal] = buildCross(blockModel, sprites.get(texture), x, y, z);
                     }
                     ordinal++;
                 }
@@ -78,7 +77,7 @@ final class SnowyLeavesOverlay
         }
     }
 
-    static SnowyLeavesOverlay get(Function<ResourceLocation, TextureAtlasSprite> spriteGetter, boolean unculled)
+    static SnowyLeavesOverlay get(Function<ResourceLocation, TextureAtlasSprite> spriteGetter)
     {
         final List<TextureAtlasSprite> sprites = List.of(
             spriteGetter.apply(TEXTURES[0]),
@@ -86,8 +85,8 @@ final class SnowyLeavesOverlay
             spriteGetter.apply(TEXTURES[2])
         );
         return CACHE.computeIfAbsent(
-            new CacheKey(sprites, unculled),
-            key -> new SnowyLeavesOverlay(key.sprites(), key.unculled())
+            new CacheKey(sprites),
+            key -> new SnowyLeavesOverlay(key.sprites())
         );
     }
 
@@ -113,8 +112,7 @@ final class SnowyLeavesOverlay
         TextureAtlasSprite sprite,
         float x,
         float y,
-        float z,
-        boolean unculled
+        float z
     )
     {
         final Map<Direction, BlockElementFace> faces = Maps.newEnumMap(Direction.class);
@@ -131,36 +129,9 @@ final class SnowyLeavesOverlay
         final BlockElement second = new BlockElement(from, to, faces, makeRotation(-45.0F), false);
         final SimpleBakedModel.Builder builder = new SimpleBakedModel.Builder(blockModel, ItemOverrides.EMPTY, false)
             .particle(sprite);
-        addFaces(builder, first, sprite, unculled);
-        addFaces(builder, second, sprite, unculled);
+        LeavesBakedModel.assembleFluffFaces(builder, first, sprite);
+        LeavesBakedModel.assembleFluffFaces(builder, second, sprite);
         return builder.build(NamedRenderTypeManager.get(ResourceLocation.parse("cutout_mipped")));
-    }
-
-    private static void addFaces(
-        SimpleBakedModel.Builder builder,
-        BlockElement element,
-        TextureAtlasSprite sprite,
-        boolean unculled
-    )
-    {
-        for (Map.Entry<Direction, BlockElementFace> entry : element.faces.entrySet())
-        {
-            final BakedQuad quad = Helpers.makeBakedQuad(
-                element,
-                entry.getValue(),
-                sprite,
-                entry.getKey(),
-                BlockModelRotation.X0_Y0
-            );
-            if (unculled)
-            {
-                builder.addUnculledFace(quad);
-            }
-            else
-            {
-                builder.addCulledFace(entry.getKey(), quad);
-            }
-        }
     }
 
     private static BlockElementRotation makeRotation(float degrees)
@@ -173,7 +144,7 @@ final class SnowyLeavesOverlay
         );
     }
 
-    private record CacheKey(List<TextureAtlasSprite> sprites, boolean unculled)
+    private record CacheKey(List<TextureAtlasSprite> sprites)
     {
     }
 }

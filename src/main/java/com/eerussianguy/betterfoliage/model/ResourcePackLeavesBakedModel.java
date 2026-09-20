@@ -24,7 +24,6 @@ import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.BlockModelRotation;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.SimpleBakedModel;
 import net.minecraft.core.BlockPos;
@@ -63,8 +62,7 @@ public final class ResourcePackLeavesBakedModel extends BakedModelWrapper<BakedM
         super(originalModel);
         this.compositeGetter = texture -> spriteGetter.apply(new Material(TextureAtlas.LOCATION_BLOCKS, texture));
         this.snowOverlay = SnowyLeavesOverlay.get(
-            texture -> spriteGetter.apply(new Material(TextureAtlas.LOCATION_BLOCKS, texture)),
-            true
+            texture -> spriteGetter.apply(new Material(TextureAtlas.LOCATION_BLOCKS, texture))
         );
     }
 
@@ -230,23 +228,9 @@ public final class ResourcePackLeavesBakedModel extends BakedModelWrapper<BakedM
 
         // Stay True's bushy planes are unculled. Keeping the replacement in the same bucket lets us remove and add
         // them in one model query while preserving every directional core quad supplied by the resource pack.
-        addUnculledFaces(builder, first, key.sprite());
-        addUnculledFaces(builder, second, key.sprite());
+        LeavesBakedModel.assembleFluffFaces(builder, first, key.sprite());
+        LeavesBakedModel.assembleFluffFaces(builder, second, key.sprite());
         return builder.build(NamedRenderTypeManager.get(ResourceLocation.parse("cutout_mipped")));
-    }
-
-    private static void addUnculledFaces(SimpleBakedModel.Builder builder, BlockElement element, TextureAtlasSprite sprite)
-    {
-        for (Map.Entry<Direction, BlockElementFace> entry : element.faces.entrySet())
-        {
-            builder.addUnculledFace(Helpers.makeBakedQuad(
-                element,
-                entry.getValue(),
-                sprite,
-                entry.getKey(),
-                BlockModelRotation.X0_Y0
-            ));
-        }
     }
 
     private static BlockElementRotation makeRotation(float degrees)

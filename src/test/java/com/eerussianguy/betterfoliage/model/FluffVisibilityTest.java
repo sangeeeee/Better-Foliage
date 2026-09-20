@@ -92,6 +92,7 @@ final class FluffVisibilityTest
             new NativeImage(16, 16, true), ResourceMetadata.EMPTY))
         {
             TextureAtlasSprite base = new TestSprite(contents, 16), composite = new TestSprite(contents, 128);
+            neighborCulling(base);
             FaceBakery bakery = new FaceBakery();
             for (float offset : new float[] {-5, 0, 5})
             {
@@ -129,7 +130,7 @@ final class FluffVisibilityTest
                         check(composed.get(selected).getSprite() == composite && !composed.get(selected).isTinted(), "composite remains untinted");
                         selected++;
                     }
-                    // BF can query each face bucket separately, while Stay True / Cull Leaves use a null-side bucket.
+                    // Filtering also remains correct on arbitrary front/back subsets.
                     for (int face = 0; face < 2; face++)
                     {
                         List<BakedQuad> bucket = new ArrayList<>();
@@ -137,6 +138,39 @@ final class FluffVisibilityTest
                         check(bucket.size() == Integer.bitCount(planes), "directional front/back bucket agrees with unculled cross");
                     }
                 }
+            }
+        }
+    }
+
+    private static void neighborCulling(TextureAtlasSprite sprite)
+    {
+        var block = new BlockModel(null, new ArrayList<>(), java.util.Map.of(), false,
+            BlockModel.GuiLight.FRONT, ItemTransforms.NO_TRANSFORMS, new ArrayList<>());
+        var builder = new net.minecraft.client.resources.model.SimpleBakedModel.Builder(block, ItemOverrides.EMPTY, false).particle(sprite);
+        var faces = java.util.Map.of(
+            Direction.NORTH, new BlockElementFace(null, 0, "", new BlockFaceUV(new float[] {0, 0, 16, 16}, 0)),
+            Direction.SOUTH, new BlockElementFace(null, 0, "", new BlockFaceUV(new float[] {0, 0, 16, 16}, 0)));
+        for (float angle : new float[] {45, -45})
+            LeavesBakedModel.assembleFluffFaces(builder, new BlockElement(new Vector3f(-8, -8, 8),
+                new Vector3f(24, 24, 8), faces,
+                new BlockElementRotation(new Vector3f(.5F, 0, .5F), Direction.Axis.Y, angle, false), false), sprite);
+        var model = builder.build();
+        var random = net.minecraft.util.RandomSource.create(17);
+        // Simulate every combination of six blocked cube faces, including north/south/both.
+        for (int blocked = 0; blocked < 64; blocked++)
+        {
+            List<BakedQuad> emitted = new ArrayList<>(model.getQuads(null, null, random));
+            for (Direction side : Direction.values())
+            {
+                check(model.getQuads(null, side, random).isEmpty(), "fluff is never tied to a cube face bucket");
+                if ((blocked & (1 << side.ordinal())) == 0) emitted.addAll(model.getQuads(null, side, random));
+            }
+            check(emitted.size() == 4, "neighbor culling cannot remove one half of the cross");
+            for (int planes = 0; planes <= FULL; planes++)
+            {
+                List<BakedQuad> filtered = new ArrayList<>();
+                LeavesBakedModel.appendPositionRotation(filtered, emitted, List.of(), 2, null, planes);
+                check(filtered.size() == Integer.bitCount(planes) * 2, "explicit thinning keeps paired faces regardless of neighbors");
             }
         }
     }

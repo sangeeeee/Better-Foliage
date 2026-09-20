@@ -54,6 +54,8 @@ All these compatibility assets are included directly in the mod JAR. No separate
 
 Normal, snowy and supported resource-pack fluff (including Stay True) share a coordinate-stable diagonal selection. Existing Sodium Leaf Culling and Cull Leaves suppression takes priority; this never restores fluff hidden by those integrations or changes leaf-cube geometry/culling.
 
+Fluff's front and back faces are emitted independently of the cube's directional neighbor-face buckets, even without a culling mod installed. A block immediately north or south therefore cannot delete just one viewing side of a diagonal. Explicit whole-fluff suppression and diagonal selection still apply; this does not make fluff visible through solid blocks.
+
 For leaves not already suppressed:
 
 | Immediate neighbors | Fluff retained |

@@ -41,7 +41,6 @@ public class LeavesBakedModel extends BFBakedModel
     private final BlockModel blockModel;
     private final BakedModel[] crosses;
     private final SnowyLeavesOverlay snowOverlay;
-    private final boolean unculledFluff;
     private final SnowCompositeSprites.SpriteSet snowyFluff;
 
     private final BakedModel core;
@@ -57,8 +56,7 @@ public class LeavesBakedModel extends BFBakedModel
         this.fluffTex = spriteGetter.apply(fluff);
         this.snowyFluff = SnowCompositeSprites.findSet(fluff, spriteGetter);
         this.crosses = new BakedModel[(int) Math.pow(BFConfig.CLIENT.leavesCacheSize.get(), 3)];
-        this.unculledFluff = CullLeavesCompat.usesIndependentFluff();
-        this.snowOverlay = SnowyLeavesOverlay.get(spriteGetter, unculledFluff);
+        this.snowOverlay = SnowyLeavesOverlay.get(spriteGetter);
         this.core = buildBlock(leavesTex, tintLeaves);
         this.outerCore = isOverlay ? buildBlock(spriteGetter.apply(overlay), tintOverlay) : null;
         buildCrosses();
@@ -101,8 +99,8 @@ public class LeavesBakedModel extends BFBakedModel
         BlockElement partR = new BlockElement(from, to, mapFacesIn, makeRotation(-45f), false);
 
         SimpleBakedModel.Builder builder = new SimpleBakedModel.Builder(blockModel, ItemOverrides.EMPTY, false).particle(leavesTex);
-        assembleFluffFaces(builder, part);
-        assembleFluffFaces(builder, partR);
+        assembleFluffFaces(builder, part, fluffTex);
+        assembleFluffFaces(builder, partR, fluffTex);
 
         crosses[ordinal] = builder.build(NamedRenderTypeManager.get(ResourceLocation.parse("cutout_mipped")));
     }
@@ -146,7 +144,9 @@ public class LeavesBakedModel extends BFBakedModel
         float rotation = 0;
         TextureAtlasSprite composite = null;
         final int planes = FluffVisibilityData.mask(extraData);
-        final boolean fluffBucket = unculledFluff ? side == null : side == Direction.NORTH || side == Direction.SOUTH;
+        // Diagonal planes are not cube boundary faces. Neighbor face culling must never remove
+        // only their north- or south-facing halves; explicit whole-fluff/plane rules apply below.
+        final boolean fluffBucket = side == null;
         if (fluffBucket && planes != 0 && !SodiumLeafCullingCompat.shouldSuppressFluff() && !CullLeavesCompat.shouldSuppressFluff(extraData))
         {
             final LeavesOrdinalData variation = LeavesOrdinalData.fromSeed(seed);
@@ -187,17 +187,12 @@ public class LeavesBakedModel extends BFBakedModel
         return tintLeaves && FluffVisibilityData.mask(selected) != 0 ? SnowTintData.append(level, pos, state, selected) : selected;
     }
 
-    private void assembleFluffFaces(SimpleBakedModel.Builder builder, BlockElement part)
+    static void assembleFluffFaces(SimpleBakedModel.Builder builder, BlockElement part, TextureAtlasSprite sprite)
     {
-        if (!unculledFluff)
-        {
-            Helpers.assembleFaces(builder, part, fluffTex);
-            return;
-        }
         for (Map.Entry<Direction, BlockElementFace> face : part.faces.entrySet())
         {
             builder.addUnculledFace(Helpers.makeBakedQuad(
-                part, face.getValue(), fluffTex, face.getKey(), BlockModelRotation.X0_Y0
+                part, face.getValue(), sprite, face.getKey(), BlockModelRotation.X0_Y0
             ));
         }
     }
