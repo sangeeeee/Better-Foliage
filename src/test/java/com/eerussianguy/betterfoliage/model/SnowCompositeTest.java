@@ -50,6 +50,7 @@ public final class SnowCompositeTest
         reloadTests();
         SnowPaletteCacheTest.run();
         EclipticLeafTest.run();
+        FluffVisibilityTest.run();
         if (args.length > 0) resourcePackTests(java.nio.file.Path.of(args[0]));
         System.out.println("Snow composites: " + checks + " checks passed");
     }

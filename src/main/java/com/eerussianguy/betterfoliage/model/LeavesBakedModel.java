@@ -145,8 +145,9 @@ public class LeavesBakedModel extends BFBakedModel
         List<BakedQuad> snowQuads = List.of();
         float rotation = 0;
         TextureAtlasSprite composite = null;
+        final int planes = FluffVisibilityData.mask(extraData);
         final boolean fluffBucket = unculledFluff ? side == null : side == Direction.NORTH || side == Direction.SOUTH;
-        if (fluffBucket && !SodiumLeafCullingCompat.shouldSuppressFluff() && !CullLeavesCompat.shouldSuppressFluff(extraData))
+        if (fluffBucket && planes != 0 && !SodiumLeafCullingCompat.shouldSuppressFluff() && !CullLeavesCompat.shouldSuppressFluff(extraData))
         {
             final LeavesOrdinalData variation = LeavesOrdinalData.fromSeed(seed);
             crossQuads = crosses[variation.get()].getQuads(state, side, rand, extraData, renderType);
@@ -161,10 +162,11 @@ public class LeavesBakedModel extends BFBakedModel
         final List<BakedQuad> outQuads = isOverlay
             ? Objects.requireNonNull(outerCore).getQuads(state, side, rand, extraData, renderType) : List.of();
         if (crossQuads.isEmpty() && snowQuads.isEmpty() && outQuads.isEmpty()) return coreQuads;
-        final List<BakedQuad> result = new ArrayList<>(coreQuads.size() + crossQuads.size() + snowQuads.size() + outQuads.size());
+        final List<BakedQuad> result = new ArrayList<>(coreQuads.size() +
+            (crossQuads.size() + snowQuads.size()) * Integer.bitCount(planes) / 2 + outQuads.size());
         // Avoid Collection.toArray() temporaries from addAll on the hot mesh-building path.
         for (BakedQuad quad : coreQuads) result.add(quad);
-        appendPositionRotation(result, crossQuads, snowQuads, rotation, composite);
+        appendPositionRotation(result, crossQuads, snowQuads, rotation, composite, planes);
         for (BakedQuad quad : outQuads) result.add(quad);
         return result;
     }
@@ -181,8 +183,8 @@ public class LeavesBakedModel extends BFBakedModel
         final ModelData culled = CullLeavesCompat.append(level, pos, state, data);
         // Hidden fluff cannot display snow. Visible leaves always recompute snow, including reused ModelData.
         if (CullLeavesCompat.shouldSuppressFluff(culled)) return culled;
-        final ModelData snowy = SnowyLeavesData.append(level, pos, state, culled);
-        return tintLeaves ? SnowTintData.append(level, pos, state, snowy) : snowy;
+        final ModelData selected = FluffVisibilityData.append(level, pos, state, culled);
+        return tintLeaves && FluffVisibilityData.mask(selected) != 0 ? SnowTintData.append(level, pos, state, selected) : selected;
     }
 
     private void assembleFluffFaces(SimpleBakedModel.Builder builder, BlockElement part)
@@ -218,20 +220,28 @@ public class LeavesBakedModel extends BFBakedModel
     static void appendPositionRotation(List<BakedQuad> result, List<BakedQuad> source,
         List<BakedQuad> snow, float rotationDegrees, @Nullable TextureAtlasSprite composite)
     {
-        if (source.isEmpty() && snow.isEmpty()) return;
+        appendPositionRotation(result, source, snow, rotationDegrees, composite, FluffVisibilityData.FULL);
+    }
+
+    static void appendPositionRotation(List<BakedQuad> result, List<BakedQuad> source,
+        List<BakedQuad> snow, float rotationDegrees, @Nullable TextureAtlasSprite composite, int planes)
+    {
+        if (planes == 0 || (source.isEmpty() && snow.isEmpty())) return;
 
         final double radians = Math.toRadians(rotationDegrees);
         final float sin = (float) Math.sin(radians);
         final float cos = (float) Math.cos(radians);
-        appendRotatedQuads(result, source, sin, cos, composite);
-        appendRotatedQuads(result, snow, sin, cos, null);
+        appendRotatedQuads(result, source, sin, cos, composite, planes);
+        appendRotatedQuads(result, snow, sin, cos, null, planes);
     }
 
     private static void appendRotatedQuads(List<BakedQuad> result, List<BakedQuad> source, float sin, float cos,
-        @Nullable TextureAtlasSprite composite)
+        @Nullable TextureAtlasSprite composite, int planes)
     {
         for (BakedQuad quad : source)
         {
+            // Select whole double-sided planes before allocating or rotating their vertex data.
+            if (!FluffVisibilityData.keep(quad, planes)) continue;
             final int[] vertices = Arrays.copyOf(quad.getVertices(), quad.getVertices().length);
             float centreX = 0.0F;
             float centreZ = 0.0F;

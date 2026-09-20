@@ -30,6 +30,10 @@ public class ClientConfig
     public final ModConfigSpec.BooleanValue eclipticSnowLeaves;
     public final ModConfigSpec.IntValue eclipticSnowAtlasBudget;
     public final ModConfigSpec.ConfigValue<String> snowExtraColors;
+    public final ModConfigSpec.BooleanValue fluffVisibilityEnabled;
+    public final ModConfigSpec.DoubleValue fluffCornerSecondChance;
+    public final ModConfigSpec.DoubleValue fluffSideChance;
+    public final ModConfigSpec.DoubleValue fluffBottomChance;
 
     ClientConfig(ModConfigSpec.Builder innerBuilder)
     {
@@ -47,6 +51,17 @@ public class ClientConfig
         forceForgeLighting = builder.apply("forceForgeLighting").comment("Force Forge Lighting Pipeline? (should be true when not using Optifine)").define("forceForgeLighting", true);
         extraGrassRarity = builder.apply("extraGrassRarity").comment("Inverse of the rarity of the extra grass. Increase the value to make it less common.").defineInRange("extraGrassRarity", 2, 1, Integer.MAX_VALUE);
 
+        innerBuilder.pop();
+
+        innerBuilder.push("fluffVisibility");
+        fluffVisibilityEnabled = innerBuilder.comment("Thin fluff using immediate neighbors and stable world coordinates. Existing leaf-culling rules still take priority. Reload chunks/resources after changes.")
+            .define("enabled", true);
+        fluffCornerSecondChance = innerBuilder.comment("Chance of retaining the second diagonal at an exposed horizontal corner; the corner diagonal is always retained.")
+            .defineInRange("cornerSecondChance", 0.5D, 0.0D, 1.0D);
+        fluffSideChance = innerBuilder.comment("Independent chance for each diagonal when one side, or two opposite sides, is exposed to air.")
+            .defineInRange("sideChance", 0.65D, 0.0D, 1.0D);
+        fluffBottomChance = innerBuilder.comment("Independent chance for each diagonal when horizontal sides and top are covered but the bottom is exposed to air.")
+            .defineInRange("bottomChance", 0.65D, 0.0D, 1.0D);
         innerBuilder.pop();
 
         innerBuilder.push("snowPalette");

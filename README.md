@@ -20,7 +20,7 @@ Most elements of this mod can be disabled via Resource Packs.
 
 - **Ecliptic Seasons:** renders snowy fluff when the mod considers the leaf block snow-covered, as well as when ordinary snow lies above the leaves. The integration uses a compile-only dependency; Ecliptic Seasons is not bundled or required at runtime.
 - **Sodium Leaf Culling:** respects its None, Hollow, Solid, and Solid Aggressive modes. Hidden fluff is omitted according to the selected mode, avoiding opaque fluff squares caused by leaf-culling optimizations.
-- **Cull Leaves (4.1.1):** keeps its original leaf-cube face culling, but renders BF fluff as a complete, independently culled cross. While Cull Leaves culling is enabled, fluff is hidden only when all six adjacent positions contain non-air blocks (including water and non-solid blocks). Snowy fluff and supported resource-pack bushy models follow the same rule. No Cull Leaves runtime dependency is required. If Sodium Leaf Culling is also enabled, its existing suppression rules still apply independently.
+- **Cull Leaves (4.1.1):** keeps its original leaf-cube face culling, but handles BF fluff independently. While Cull Leaves culling is enabled, its compatibility gate hides fluff when all six adjacent positions contain non-air blocks (including water and non-solid blocks). Otherwise, the neighborhood thinning rules below select which double-sided diagonals to retain. Snowy fluff and supported resource-pack bushy models follow the same rules. No Cull Leaves runtime dependency is required. If Sodium Leaf Culling is also enabled, its existing suppression rules still apply independently.
 - **Sodium / Iris:** includes optional rendering bridges for the additional vegetation geometry and shader material handling. Shader waving still requires a shader pack that supports the relevant vegetation category.
 - **Stay True and supported bushy-leaf resource-pack models:** reuses the pack's bushy textures while letting Better Foliage control fluff placement, rotation, and leaf-culling compatibility. This is not a guarantee of support for every custom model format.
 - **Resource reloads:** generated snowy fluff follows the currently loaded textures; reloading resources reuses validated disk caches or rebuilds changed variants.
@@ -49,6 +49,34 @@ Existing compatibility resources are also retained for Atmospheric, Bayou Blues,
 All these compatibility assets are included directly in the mod JAR. No separate Better Foliage Addons resource pack is needed. Supplemental models use isolated `betterfoliage_*` namespaces to preserve the existing compatibility resources.
 
 ## Configuration
+
+### Neighborhood-based fluff thinning
+
+Normal, snowy and supported resource-pack fluff (including Stay True) share a coordinate-stable diagonal selection. Existing Sodium Leaf Culling and Cull Leaves suppression takes priority; this never restores fluff hidden by those integrations or changes leaf-cube geometry/culling.
+
+For leaves not already suppressed:
+
+| Immediate neighbors | Fluff retained |
+| --- | --- |
+| Air or snow above (including snow layers and full snow blocks) | Full X |
+| Three or four horizontal sides exposed to air | Full X |
+| Exactly two adjacent horizontal sides exposed to air | The diagonal toward that corner, plus a 50% chance for the other |
+| One horizontal side, or two opposite horizontal sides, exposed to air | Each diagonal independently has a 65% chance |
+| No horizontal air, covered above, but air below | Each diagonal independently has a 65% chance, preserving some underside detail |
+| No air above, below or on any horizontal side, and no snow above | No fluff |
+
+"Exposed" means actual air, not just a transparent/non-solid neighboring block. Each retained diagonal includes both front and back faces. Selection is independent of the camera and of the existing placement, rotation and snow-variant random stream. Composite snow uses the same selected geometry; fallback snow overlays are filtered with their base planes. Stay True keeps its textures and original leaf cube, but its original bushy planes are removed even when the replacement selects no fluff.
+
+Client configuration section `[fluffVisibility]` (reload chunks/resources after changing):
+
+| Setting | Default | Meaning |
+| --- | --- | --- |
+| `enabled` | `true` | Enable neighborhood thinning; disabling restores the previous fluff behavior, including existing culling integrations |
+| `cornerSecondChance` | `0.5` | Probability for the optional second diagonal at a horizontal corner |
+| `sideChance` | `0.65` | Independent probability per diagonal on exposed sides |
+| `bottomChance` | `0.65` | Independent probability per diagonal on otherwise enclosed undersides |
+
+All probabilities range from 0 to 1. Decisions are made during chunk mesh construction, not each rendered frame. The top-air/snow path stops after one neighbor lookup; other cases inspect at most six immediate neighbors and reuse the top sample for snow detection. Rejected planes are skipped before vertex copying/rotation. There is no additional per-position cache or multiplication of baked-model caches. Frame-rate improvements depend on canopy shape and rendering/shader workload; exposed tops intentionally remain full.
 
 ### Single-layer snowy fluff
 

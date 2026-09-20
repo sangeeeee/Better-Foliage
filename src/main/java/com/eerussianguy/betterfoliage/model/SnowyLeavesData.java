@@ -24,6 +24,11 @@ public final class SnowyLeavesData
     {
         final BlockPos.MutableBlockPos above = ABOVE_POS.get().setWithOffset(pos, Direction.UP);
         final BlockState aboveState = level.getBlockState(above);
+        return append(level, pos, state, data, aboveState);
+    }
+
+    static ModelData append(BlockAndTintGetter level, BlockPos pos, BlockState state, ModelData data, BlockState aboveState)
+    {
         // Physical snow (layers or full blocks) always supplies a snowy top. Seasonal snow only
         // reaches exposed fluff: any non-snow, non-air block above keeps the ordinary fluff.
         // Short-circuit the optional seasonal query for both covered leaves and physical snow.
